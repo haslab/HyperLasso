@@ -37,13 +37,13 @@ forall M.
 							&
 							(
 								green_left[M]
-								=
+								<->
 								default_green_left_0[C]
 							)
 							&
 							(
 								green_right[M]
-								=
+								<->
 								default_green_right_0[C]
 							)
 							&
@@ -65,13 +65,13 @@ forall M.
 							&
 							(
 								green_left[M]
-								=
+								<->
 								default_green_left_1[C]
 							)
 							&
 							(
 								green_right[M]
-								=
+								<->
 								default_green_right_1[C]
 							)
 							&
@@ -93,13 +93,13 @@ forall M.
 							&
 							(
 								green_left[M]
-								=
+								<->
 								default_green_left_2[C]
 							)
 							&
 							(
 								green_right[M]
-								=
+								<->
 								default_green_right_2[C]
 							)
 							&
@@ -121,13 +121,13 @@ forall M.
 							&
 							(
 								green_left[M]
-								=
+								<->
 								default_green_left_3[C]
 							)
 							&
 							(
 								green_right[M]
-								=
+								<->
 								default_green_right_3[C]
 							)
 							&

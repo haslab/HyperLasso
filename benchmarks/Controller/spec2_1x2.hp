@@ -10,16 +10,20 @@ forall M.
 			)
 			->
 			(
-				(
-					button_0_left[C]
-					!=
-					button_1_left[C]
+				(!
+					(
+						button_0_left[C]
+						<->
+						button_1_left[C]
+					)
 				)
 				|
-				(
-					button_0_right[C]
-					!=
-					button_1_right[C]
+				(!
+					(
+						button_0_right[C]
+						<->
+						button_1_right[C]
+					)
 				)
 			)
 		)
@@ -83,25 +87,25 @@ forall M.
 							&
 							(
 								button_0_left[C]
-								=
+								<->
 								button_left[M]
 							)
 							&
 							(
 								button_0_right[C]
-								=
+								<->
 								button_right[M]
 							)
 							&
 							(
 								green_left[M]
-								=
+								<->
 								green_0_left[C]
 							)
 							&
 							(
 								green_right[M]
-								=
+								<->
 								green_0_right[C]
 							)
 							&
@@ -123,25 +127,25 @@ forall M.
 							&
 							(
 								button_1_left[C]
-								=
+								<->
 								button_left[M]
 							)
 							&
 							(
 								button_1_right[C]
-								=
+								<->
 								button_right[M]
 							)
 							&
 							(
 								green_left[M]
-								=
+								<->
 								green_1_left[C]
 							)
 							&
 							(
 								green_right[M]
-								=
+								<->
 								green_1_right[C]
 							)
 							&
@@ -161,55 +165,59 @@ forall M.
 								0
 							)
 							&
-							(
+							(!
 								(
-									from_0[C]
-									!=
-									state[M]
-								)
-								|
-								(
-									button_0_left[C]
-									!=
-									button_left[M]
-								)
-								|
-								(
-									button_0_right[C]
-									!=
-									button_right[M]
+									(
+										from_0[C]
+										=
+										state[M]
+									)
+									&
+									(
+										button_0_left[C]
+										<->
+										button_left[M]
+									)
+									&
+									(
+										button_0_right[C]
+										<->
+										button_right[M]
+									)
 								)
 							)
 							&
-							(
+							(!
 								(
-									from_1[C]
-									!=
-									state[M]
-								)
-								|
-								(
-									button_1_left[C]
-									!=
-									button_left[M]
-								)
-								|
-								(
-									button_1_right[C]
-									!=
-									button_right[M]
+									(
+										from_1[C]
+										=
+										state[M]
+									)
+									&
+									(
+										button_1_left[C]
+										<->
+										button_left[M]
+									)
+									&
+									(
+										button_1_right[C]
+										<->
+										button_right[M]
+									)
 								)
 							)
 							&
 							(
 								green_left[M]
-								=
+								<->
 								default_green_left_0[C]
 							)
 							&
 							(
 								green_right[M]
-								=
+								<->
 								default_green_right_0[C]
 							)
 							&

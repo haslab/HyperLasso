@@ -411,19 +411,19 @@ timeouts = {
     "AutoHyper-w"
         : {"gni_any_2x2","gni_any_3x3","gni_ndet_2x2","gni_ndet_3x3","gni_max_2x2","gni_max_3x3"}
         | {"rc_ser_3x2","rc_ser_4x3","ser_rc_3x2","ser_rc_4x3"}
-        | {"cni_any_2","cni_any_3","cni_any_4","cni_lte_2", "cni_lte_3", "cni_lte_4"}
+        | {"cni_any_2","cni_any_3","cni_any_4", "cni_lte_3", "cni_lte_4"}
         | {"selfstab_uf_7","selfstab_gf_7","selfstab_lf_7"}
         | {"robust_crit_2","robust_crit_3","robust_ncrit_2","robust_ncrit_3"}
-        | {"spec1_4x0","spec1_4x2","spec2_1x1","spec2_1x2","spec2_4x4"}
+        | {"spec1_4x0","spec1_4x2","spec2_1x2","spec2_4x4"}
         | {"plan_3x2","plan_3x3","plan_4x2","plan_4x3","plan_4x4"}
     ,
     "AutoHyper+w"
         : {"gni_any_2x2","gni_any_3x3","gni_ndet_2x2","gni_ndet_3x3","gni_max_2x2","gni_max_3x3"}
         | {"rc_ser_3x2","rc_ser_4x3","ser_rc_3x2","ser_rc_4x3"}
-        | {"cni_any_2","cni_any_3","cni_any_4","cni_lte_2", "cni_lte_3", "cni_lte_4"}
+        | {"cni_any_2","cni_any_3","cni_any_4", "cni_lte_3", "cni_lte_4"}
         | {"selfstab_uf_7","selfstab_gf_7","selfstab_lf_5","selfstab_lf_7"}
         | {"robust_crit_2","robust_crit_3","robust_ncrit_2","robust_ncrit_3"}
-        | {"spec1_4x0","spec1_4x2","spec2_1x1","spec2_1x2","spec2_4x4"}
+        | {"spec1_4x0","spec1_4x2","spec2_1x2","spec2_4x4"}
         | {"plan_3x2","plan_3x3","plan_4x1","plan_4x2","plan_4x3","plan_4x4"}
     ,
     "HyperLasso+w"

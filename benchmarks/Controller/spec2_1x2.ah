@@ -11,21 +11,31 @@ forall M.
 				)
 			}
 			->
-			{
-				(
+			(
+				(!
 					(
-						"button_0_left"_C
-						!=
-						"button_1_left"_C
-					)
-					|
-					(
-						"button_0_right"_C
-						!=
-						"button_1_right"_C
+						{
+							"button_0_left"_C
+						}
+						<->
+						{
+							"button_1_left"_C
+						}
 					)
 				)
-			}
+				|
+				(!
+					(
+						{
+							"button_0_right"_C
+						}
+						<->
+						{
+							"button_1_right"_C
+						}
+					)
+				)
+			)
 		)
 	)
 	&
@@ -39,11 +49,11 @@ forall M.
 						}
 						->
 						(X
-							{
-								(!
+							(!
+								{
 									"button_left"_M
-								)
-							}
+								}
+							)
 						)
 					)
 				)
@@ -55,11 +65,11 @@ forall M.
 						}
 						->
 						(X
-							{
-								(!
+							(!
+								{
 									"button_right"_M
-								)
-							}
+								}
+							)
 						)
 					)
 				)
@@ -101,37 +111,45 @@ forall M.
 								)
 							}
 							&
-							{
-								(
+							(
+								{
 									"button_0_left"_C
-									=
+								}
+								<->
+								{
 									"button_left"_M
-								)
-							}
+								}
+							)
 							&
-							{
-								(
+							(
+								{
 									"button_0_right"_C
-									=
+								}
+								<->
+								{
 									"button_right"_M
-								)
-							}
+								}
+							)
 							&
-							{
-								(
+							(
+								{
 									"green_left"_M
-									=
+								}
+								<->
+								{
 									"green_0_left"_C
-								)
-							}
+								}
+							)
 							&
-							{
-								(
+							(
+								{
 									"green_right"_M
-									=
+								}
+								<->
+								{
 									"green_0_right"_C
-								)
-							}
+								}
+							)
 							&
 							(X
 								{
@@ -153,37 +171,45 @@ forall M.
 								)
 							}
 							&
-							{
-								(
+							(
+								{
 									"button_1_left"_C
-									=
+								}
+								<->
+								{
 									"button_left"_M
-								)
-							}
+								}
+							)
 							&
-							{
-								(
+							(
+								{
 									"button_1_right"_C
-									=
+								}
+								<->
+								{
 									"button_right"_M
-								)
-							}
+								}
+							)
 							&
-							{
-								(
+							(
+								{
 									"green_left"_M
-									=
+								}
+								<->
+								{
 									"green_1_left"_C
-								)
-							}
+								}
+							)
 							&
-							{
-								(
+							(
+								{
 									"green_right"_M
-									=
+								}
+								<->
+								{
 									"green_1_right"_C
-								)
-							}
+								}
+							)
 							&
 							(X
 								{
@@ -205,65 +231,89 @@ forall M.
 								)
 							}
 							&
-							{
+							(!
 								(
+									{
+										(
+											"from_0"_C
+											=
+											"state"_M
+										)
+									}
+									&
 									(
-										"from_0"_C
-										!=
-										"state"_M
+										{
+											"button_0_left"_C
+										}
+										<->
+										{
+											"button_left"_M
+										}
 									)
-									|
+									&
 									(
-										"button_0_left"_C
-										!=
-										"button_left"_M
-									)
-									|
-									(
-										"button_0_right"_C
-										!=
-										"button_right"_M
+										{
+											"button_0_right"_C
+										}
+										<->
+										{
+											"button_right"_M
+										}
 									)
 								)
-							}
+							)
 							&
-							{
+							(!
 								(
+									{
+										(
+											"from_1"_C
+											=
+											"state"_M
+										)
+									}
+									&
 									(
-										"from_1"_C
-										!=
-										"state"_M
+										{
+											"button_1_left"_C
+										}
+										<->
+										{
+											"button_left"_M
+										}
 									)
-									|
+									&
 									(
-										"button_1_left"_C
-										!=
-										"button_left"_M
-									)
-									|
-									(
-										"button_1_right"_C
-										!=
-										"button_right"_M
+										{
+											"button_1_right"_C
+										}
+										<->
+										{
+											"button_right"_M
+										}
 									)
 								)
-							}
+							)
 							&
-							{
-								(
+							(
+								{
 									"green_left"_M
-									=
+								}
+								<->
+								{
 									"default_green_left_0"_C
-								)
-							}
+								}
+							)
 							&
-							{
-								(
+							(
+								{
 									"green_right"_M
-									=
+								}
+								<->
+								{
 									"default_green_right_0"_C
-								)
-							}
+								}
+							)
 							&
 							(X
 								{
@@ -282,17 +332,19 @@ forall M.
 		->
 		(
 			(G
-				{
-					(
-						(!
+				(
+					(!
+						{
 							"green_left"_M
-						)
-						|
-						(!
-							"green_right"_M
-						)
+						}
 					)
-				}
+					|
+					(!
+						{
+							"green_right"_M
+						}
+					)
+				)
 			)
 			&
 			(G

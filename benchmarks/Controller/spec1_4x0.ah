@@ -43,21 +43,25 @@ forall M.
 								)
 							}
 							&
-							{
-								(
+							(
+								{
 									"green_left"_M
-									=
+								}
+								<->
+								{
 									"default_green_left_0"_C
-								)
-							}
+								}
+							)
 							&
-							{
-								(
+							(
+								{
 									"green_right"_M
-									=
+								}
+								<->
+								{
 									"default_green_right_0"_C
-								)
-							}
+								}
+							)
 							&
 							(X
 								{
@@ -79,21 +83,25 @@ forall M.
 								)
 							}
 							&
-							{
-								(
+							(
+								{
 									"green_left"_M
-									=
+								}
+								<->
+								{
 									"default_green_left_1"_C
-								)
-							}
+								}
+							)
 							&
-							{
-								(
+							(
+								{
 									"green_right"_M
-									=
+								}
+								<->
+								{
 									"default_green_right_1"_C
-								)
-							}
+								}
+							)
 							&
 							(X
 								{
@@ -115,21 +123,25 @@ forall M.
 								)
 							}
 							&
-							{
-								(
+							(
+								{
 									"green_left"_M
-									=
+								}
+								<->
+								{
 									"default_green_left_2"_C
-								)
-							}
+								}
+							)
 							&
-							{
-								(
+							(
+								{
 									"green_right"_M
-									=
+								}
+								<->
+								{
 									"default_green_right_2"_C
-								)
-							}
+								}
+							)
 							&
 							(X
 								{
@@ -151,21 +163,25 @@ forall M.
 								)
 							}
 							&
-							{
-								(
+							(
+								{
 									"green_left"_M
-									=
+								}
+								<->
+								{
 									"default_green_left_3"_C
-								)
-							}
+								}
+							)
 							&
-							{
-								(
+							(
+								{
 									"green_right"_M
-									=
+								}
+								<->
+								{
 									"default_green_right_3"_C
-								)
-							}
+								}
+							)
 							&
 							(X
 								{
@@ -184,17 +200,19 @@ forall M.
 		->
 		(
 			(G
-				{
-					(
-						(!
+				(
+					(!
+						{
 							"green_left"_M
-						)
-						|
-						(!
-							"green_right"_M
-						)
+						}
 					)
-				}
+					|
+					(!
+						{
+							"green_right"_M
+						}
+					)
+				)
 			)
 			&
 			(G
@@ -228,11 +246,11 @@ forall M.
 			(G
 				(
 					(
-						{
-							(!
+						(!
+							{
 								"green_left"_M
-							)
-						}
+							}
+						)
 						&
 						(X
 							{
@@ -254,11 +272,11 @@ forall M.
 			(G
 				(
 					(
-						{
-							(!
+						(!
+							{
 								"green_right"_M
-							)
-						}
+							}
+						)
 						&
 						(X
 							{
