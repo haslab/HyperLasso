@@ -1,0 +1,45 @@
+{ "path": "Planning"
+, "benchs" :
+    {
+    
+    "plan_3x1":
+        { "smv" : ["robot_3.smv","robot_3.smv"]
+        , "hp" : "plan_3x1.hp"
+        , "k" : 2, "expected" : true, "expectsWitness" : true, "ahOpts" : "--incl-forq", "ahWitnessOpts" : "--incl-forklift" }
+    ,
+    "plan_3x2":
+        { "smv" : ["robot_3.smv","robot_3.smv","robot_3.smv"]
+        , "hp" : "plan_3x2.hp"
+        , "k" : 3, "expected" : true, "expectsWitness" : true, "ahOpts" : "--incl-forq", "ahWitnessOpts" : "--incl-forklift" }
+    ,
+    "plan_3x3":
+        { "smv" : ["robot_3.smv","robot_3.smv","robot_3.smv","robot_3.smv"]
+        , "hp" : "plan_3x3.hp"
+        , "k" : 21, "expected" : false, "expectsWitness" : false, "ahOpts" : "--incl-forq", "ahWitnessOpts" : "--incl-forklift" }
+    ,
+    
+    "plan_4x1":
+        { "smv" : ["robot_4.smv","robot_4.smv"]
+        , "hp" : "plan_4x1.hp"
+        , "k" : 2, "expected" : true, "expectsWitness" : true, "ahOpts" : "--incl-forq", "ahWitnessOpts" : "--incl-forklift" }
+    ,
+    "plan_4x2":
+        { "smv" : ["robot_4.smv","robot_4.smv","robot_4.smv"]
+        , "hp" : "plan_4x2.hp"
+        , "k" : 3, "expected" : true, "expectsWitness" : true, "ahOpts" : "--incl-forq", "ahWitnessOpts" : "--incl-forklift" }
+    ,
+    "plan_4x3":
+        { "smv" : ["robot_4.smv","robot_4.smv","robot_4.smv","robot_4.smv"]
+        , "hp" : "plan_4x3.hp"
+        , "k" : 4, "expected" : true, "expectsWitness" : true, "ahOpts" : "--incl-forq", "ahWitnessOpts" : "--incl-forklift" }
+    ,
+    "plan_4x4":
+        { "smv" : ["robot_4.smv","robot_4.smv","robot_4.smv","robot_4.smv","robot_4.smv"]
+        , "hp" : "plan_4x4.hp"
+        , "k" : 18, "expected" : false, "expectsWitness" : false, "ahOpts" : "--incl-forq", "ahWitnessOpts" : "--incl-forklift" }
+        
+    
+    
+    }
+}
+

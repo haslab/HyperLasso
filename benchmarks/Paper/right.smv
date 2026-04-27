@@ -1,0 +1,15 @@
+MODULE main
+
+VAR
+    r : 0..2;
+
+ASSIGN
+    init(r) := 0;
+    next(r) := case
+        r = 0 : 1;
+        r = 1 : {1,2};
+        TRUE : 1;
+    esac;
+
+DEFINE
+    a := (r = 2);

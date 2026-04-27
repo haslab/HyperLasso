@@ -1,0 +1,38 @@
+{ "path": "Controller"
+, "benchs" :
+    {
+    
+    "spec1_2x0":
+        { "smv" : ["controller_2x0.smv","system_2.smv"]
+        , "hp" : "spec1_2x0.hp"
+        , "k" : 27, "expected" : false, "expectsWitness" : false, "ahOpts" : "--incl-spot", "ahWitnessOpts" : "--incl-spot" }
+    ,
+    "spec1_4x0":
+        { "smv" : ["controller_4x0.smv","system_4.smv"]
+        , "hp" : "spec1_4x0.hp"
+        , "k" : 0, "expected" : true, "expectsWitness" : true, "ahOpts" : "--incl-spot", "ahWitnessOpts" : "--incl-spot" }
+    ,
+    "spec1_4x2":
+        { "smv" : ["controller_4x2.smv","system_4.smv"]
+        , "hp" : "spec1_4x2.hp"
+        , "k" : 0, "expected" : true, "expectsWitness" : true, "ahOpts" : "--incl-spot", "ahWitnessOpts" : "--incl-spot" }
+    ,
+    
+    "spec2_1x1":
+        { "smv" : ["controller_1x1.smv","system_1.smv"]
+        , "hp" : "spec2_1x1.hp"
+        , "k" : 24, "expected" : false, "expectsWitness" : false, "ahOpts" : "--incl-spot", "ahWitnessOpts" : "--incl-spot" }
+    ,
+    "spec2_1x2":
+        { "smv" : ["controller_1x2.smv","system_1.smv"]
+        , "hp" : "spec2_1x2.hp"
+        , "k" : 0, "expected" : true, "expectsWitness" : true, "ahOpts" : "--incl-spot", "ahWitnessOpts" : "--incl-spot" }
+    ,
+    "spec2_4x4":
+        { "smv" : ["controller_4x4.smv","system_4.smv"]
+        , "hp" : "spec2_4x4.hp"
+        , "k" : 0, "expected" : true, "expectsWitness" : true, "ahOpts" : "--incl-spot", "ahWitnessOpts" : "--incl-spot" }
+    
+    }
+}
+

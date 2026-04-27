@@ -1,0 +1,26 @@
+#!/bin/bash
+
+# Path to your x86_64 binary
+BINARY="/nuXmv-2.1.0-linux64/bin/nuXmv"
+
+# Optional arguments to pass to the binary
+ARGS=("$@")
+
+# Detect host architecture
+ARCH=$(uname -m)
+
+# Run logic
+case "$ARCH" in
+  x86_64)
+    echo "*** Running natively on x86_64"
+    exec "$BINARY" "${ARGS[@]}"
+    ;;
+  aarch64)
+    echo "*** Running with qemu-x86_64 on arm64 (aarch64)"
+    exec qemu-x86_64 "$BINARY" "${ARGS[@]}"
+    ;;
+  *)
+    echo "*** Unsupported architecture: $ARCH"
+    exit 1
+    ;;
+esac

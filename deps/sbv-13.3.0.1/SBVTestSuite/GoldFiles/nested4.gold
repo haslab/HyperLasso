@@ -1,0 +1,8 @@
+CAUGHT EXCEPTION
+
+Data.SBV: Mismatched contexts detected.
+***
+*** This happens if you call a proof-function (prove/sat/runSMT/isSatisfiable) etc.
+*** while another one is in execution, or use results from one such call in another.
+*** Please avoid such nested calls, all interactions should be from the same context.
+*** See https://github.com/LeventErkok/sbv/issues/71 for several examples.

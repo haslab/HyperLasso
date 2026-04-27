@@ -1,0 +1,21 @@
+MODULE main
+VAR
+    from_0 : 0..0;
+    to_0 : 0..0;
+    button_0_left : boolean;
+    button_0_right : boolean;
+    green_0_left : boolean;
+    green_0_right : boolean;
+    default_to_0 : 0..0;
+    default_green_left_0 : boolean;
+    default_green_right_0 : boolean;
+ASSIGN
+    next(from_0) := from_0;
+    next(to_0) := to_0;
+    next(button_0_left) := button_0_left;
+    next(button_0_right) := button_0_right;
+    next(green_0_left) := green_0_left;
+    next(green_0_right) := green_0_right;
+    next(default_to_0) := default_to_0;
+    next(default_green_left_0) := default_green_left_0;
+    next(default_green_right_0) := default_green_right_0;

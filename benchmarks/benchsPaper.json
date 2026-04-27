@@ -1,0 +1,12 @@
+{ "path": "Paper"
+, "benchs" :
+    {
+    
+    "toy":
+        { "smv" : ["left.smv","right.smv"]
+        , "hp" : "toy.hp"
+        , "k" : 1, "expected" : false, "expectsWitness" : true }
+    
+    }
+}
+

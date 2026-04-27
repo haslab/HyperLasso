@@ -1,0 +1,33 @@
+MODULE main
+VAR
+    i : 0..3;
+    pc_0 : 0..5;
+    number_0 : 0..3;
+    tmp_0 : 0..3;
+    pc_1 : 0..5;
+    number_1 : 0..3;
+    tmp_1 : 0..3;
+    pc_2 : 0..5;
+    number_2 : 0..3;
+    tmp_2 : 0..3;
+ASSIGN
+    init(i) := {0,1,2,3};
+    next(i) := {0,1,2,3};
+    init(pc_0) := 0;
+    init(number_0) := 0;
+    init(tmp_0) := {0,1,2,3};
+    next(pc_0) := case (i = 0 & pc_0 = 0): 1; (i = 0 & pc_0 = 1): 2; (i = 0 & pc_0 = 2 & tmp_0 < 3): 3; (i = 0 & pc_0 = 3  & ((number_1 = 0 | number_0 < number_1 | (number_0 = number_1 & 0 < 1)) & !(pc_1 = 2) & (number_2 = 0 | number_0 < number_2 | (number_0 = number_2 & 0 < 2)) & !(pc_2 = 2))): 4; (i = 0 & pc_0 = 4): 5; (i = 0 & pc_0 = 5): 0; TRUE: pc_0; esac;
+    next(number_0) := case (i = 0 & pc_0 = 2 & tmp_0 < 3): tmp_0 + 1; (i = 0 & pc_0 = 5) : 0; TRUE: number_0; esac;
+    next(tmp_0) := case (i = 0 & pc_0 = 1  & number_1 <= number_0 & number_2 <= number_0): number_0; (i = 0 & pc_0 = 1  & number_0 <= number_1 & number_2 <= number_1): number_1; (i = 0 & pc_0 = 1  & number_0 <= number_2 & number_1 <= number_2): number_2; TRUE: tmp_0; esac;
+    init(pc_1) := 0;
+    init(number_1) := 0;
+    init(tmp_1) := {0,1,2,3};
+    next(pc_1) := case (i = 1 & pc_1 = 0): 1; (i = 1 & pc_1 = 1): 2; (i = 1 & pc_1 = 2 & tmp_1 < 3): 3; (i = 1 & pc_1 = 3  & ((number_0 = 0 | number_1 < number_0 | (number_1 = number_0 & 1 < 0)) & !(pc_0 = 2) & (number_2 = 0 | number_1 < number_2 | (number_1 = number_2 & 1 < 2)) & !(pc_2 = 2))): 4; (i = 1 & pc_1 = 4): 5; (i = 1 & pc_1 = 5): 0; TRUE: pc_1; esac;
+    next(number_1) := case (i = 1 & pc_1 = 2 & tmp_1 < 3): tmp_1 + 1; (i = 1 & pc_1 = 5) : 0; TRUE: number_1; esac;
+    next(tmp_1) := case (i = 1 & pc_1 = 1  & number_1 <= number_0 & number_2 <= number_0): number_0; (i = 1 & pc_1 = 1  & number_0 <= number_1 & number_2 <= number_1): number_1; (i = 1 & pc_1 = 1  & number_0 <= number_2 & number_1 <= number_2): number_2; TRUE: tmp_1; esac;
+    init(pc_2) := 0;
+    init(number_2) := 0;
+    init(tmp_2) := {0,1,2,3};
+    next(pc_2) := case (i = 2 & pc_2 = 0): 1; (i = 2 & pc_2 = 1): 2; (i = 2 & pc_2 = 2 & tmp_2 < 3): 3; (i = 2 & pc_2 = 3  & ((number_0 = 0 | number_2 < number_0 | (number_2 = number_0 & 2 < 0)) & !(pc_0 = 2) & (number_1 = 0 | number_2 < number_1 | (number_2 = number_1 & 2 < 1)) & !(pc_1 = 2))): 4; (i = 2 & pc_2 = 4): 5; (i = 2 & pc_2 = 5): 0; TRUE: pc_2; esac;
+    next(number_2) := case (i = 2 & pc_2 = 2 & tmp_2 < 3): tmp_2 + 1; (i = 2 & pc_2 = 5) : 0; TRUE: number_2; esac;
+    next(tmp_2) := case (i = 2 & pc_2 = 1  & number_1 <= number_0 & number_2 <= number_0): number_0; (i = 2 & pc_2 = 1  & number_0 <= number_1 & number_2 <= number_1): number_1; (i = 2 & pc_2 = 1  & number_0 <= number_2 & number_1 <= number_2): number_2; TRUE: tmp_2; esac;

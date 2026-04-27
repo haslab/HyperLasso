@@ -1,0 +1,32 @@
+CAUGHT EXCEPTION
+
+
+*** Data.SBV.Lambda: Detected free variables passed to a lambda.
+***
+***  Free vars : args0
+***  Definition: (lambda ((s0 (Seq Int)))
+***                (seq.++ s0 args0))
+***
+*** SBV currently does not support lambda-functions that capture variables. For
+*** instance, consider:
+***
+***     map (\x -> map (\y -> x + y))
+***
+*** where the inner 'map' uses 'x', bound by the outer 'map'. Instead, create
+*** a closure instead:
+***
+***     map (\x -> map (Closure { closureEnv = x
+***                             , closureFun = \env y -> env + y
+***                             }))
+***
+*** which will explicitly create the closure before calling 'map'. The environment can
+*** be any symbolic value: You can use a tuple to support multiple free variables.
+***
+*** (SBV firstifies higher-order functions via a simple translation to make it fit with
+*** SMTLib's first-order logic. This translation does not currently support free
+*** variables. In technical terms, we would need to do closure conversion and lambda-lifting.
+*** SBV isn't capable of doing the closure-conversion part, relying on the user to do so.)
+***
+*** Please rewrite your program to create a closure and use that as an argument.
+*** If this solution isn't applicable, or if you'd like help doing so, please get in
+*** touch for further possible enhancements.

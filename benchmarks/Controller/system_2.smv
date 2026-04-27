@@ -1,0 +1,7 @@
+MODULE main
+VAR
+    state : 0..1;
+    button_left : boolean;
+    button_right : boolean;
+    green_left : boolean;
+    green_right : boolean;

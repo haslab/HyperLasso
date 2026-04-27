@@ -1,0 +1,72 @@
+{ "path": "SelfStabilization"
+, "benchs" :
+    {
+    
+    "selfstab_uf_3":
+        { "smv" : ["herman_3.smv","herman_3.smv"]
+        , "asmv" : ["herman_assigns_3.smv","herman_assigns_3.smv"]
+        , "hp" : "selfstab_uf_3.hp"
+        , "ahp" : "selfstab_uf_assigns_3.ah"
+        , "k" : 0, "expected" : false, "expectsWitness" : true, "ahOpts" : "--incl-spot", "ahWitnessOpts" : "--incl-forklift" }
+    ,
+    "selfstab_uf_5":
+        { "smv" : ["herman_5.smv","herman_5.smv"]
+        , "asmv" : ["herman_assigns_5.smv","herman_assigns_5.smv"]
+        , "hp" : "selfstab_uf_5.hp"
+        , "ahp" : "selfstab_uf_assigns_5.ah"
+        , "k" : 0, "expected" : false, "expectsWitness" : true, "ahOpts" : "--incl-spot", "ahWitnessOpts" : "--incl-forklift" }
+    ,
+    "selfstab_uf_7":
+        { "smv" : ["herman_7.smv","herman_7.smv"]
+        , "asmv" : ["herman_assigns_7.smv","herman_assigns_7.smv"]
+        , "hp" : "selfstab_uf_7.hp"
+        , "ahp" : "selfstab_uf_assigns_7.ah"
+        , "k" : 0, "expected" : false, "expectsWitness" : true, "ahOpts" : "--incl-spot", "ahWitnessOpts" : "--incl-forklift" }
+    ,
+    
+    "selfstab_gf_3":
+        { "smv" : ["herman_3.smv","herman_3.smv"]
+        , "asmv" : ["herman_assigns_3.smv","herman_assigns_3.smv"]
+        , "hp" : "selfstab_gf_3.hp"
+        , "ahp" : "selfstab_gf_assigns_3.ah"
+        , "k" : 1, "expected" : false, "expectsWitness" : true, "ahOpts" : "--incl-spot", "ahWitnessOpts" : "--incl-forklift" }
+    ,
+    "selfstab_gf_5":
+        { "smv" : ["herman_5.smv","herman_5.smv"]
+        , "asmv" : ["herman_assigns_5.smv","herman_assigns_5.smv"]
+        , "hp" : "selfstab_gf_5.hp"
+        , "ahp" : "selfstab_gf_assigns_5.ah"
+        , "k" : 1, "expected" : false, "expectsWitness" : true, "ahOpts" : "--incl-spot", "ahWitnessOpts" : "--incl-forklift" }
+    ,
+    "selfstab_gf_7":
+        { "smv" : ["herman_7.smv","herman_7.smv"]
+        , "asmv" : ["herman_assigns_7.smv","herman_assigns_7.smv"]
+        , "hp" : "selfstab_gf_7.hp"
+        , "ahp" : "selfstab_gf_assigns_7.ah"
+        , "k" : 1, "expected" : false, "expectsWitness" : true, "ahOpts" : "--incl-spot", "ahWitnessOpts" : "--incl-forklift" }
+    ,
+    
+    "selfstab_lf_3":
+        { "smv" : ["herman_3.smv","herman_3.smv"]
+        , "asmv" : ["herman_assigns_3.smv","herman_assigns_3.smv"]
+        , "hp" : "selfstab_lf_3.hp"
+        , "ahp" : "selfstab_lf_assigns_3.ah"
+        , "k" : 5, "expected" : true, "expectsWitness" : false, "ahOpts" : "--incl-spot", "ahWitnessOpts" : "--incl-forklift" }
+    ,
+    "selfstab_lf_5":
+        { "smv" : ["herman_5.smv","herman_5.smv"]
+        , "asmv" : ["herman_assigns_5.smv","herman_assigns_5.smv"]
+        , "hp" : "selfstab_lf_5.hp"
+        , "ahp" : "selfstab_lf_assigns_5.ah"
+        , "k" : 4, "expected" : true, "expectsWitness" : false, "ahOpts" : "--incl-spot", "ahWitnessOpts" : "--incl-forklift" }
+    ,
+    "selfstab_lf_7":
+        { "smv" : ["herman_7.smv","herman_7.smv"]
+        , "asmv" : ["herman_assigns_7.smv","herman_assigns_7.smv"]
+        , "hp" : "selfstab_lf_7.hp"
+        , "ahp" : "selfstab_lf_assigns_7.ah"
+        , "k" : 5, "expected" : true, "expectsWitness" : false, "ahOpts" : "--incl-spot", "ahWitnessOpts" : "--incl-forklift" }
+    
+    }
+}
+

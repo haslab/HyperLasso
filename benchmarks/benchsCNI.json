@@ -1,0 +1,56 @@
+{ "path": "CNI"
+, "benchs" :
+    {
+    
+    "cni_any_1":
+        { "smv" : ["cni_any_1.smv","cni_any_1.smv"]
+        , "hp" : "cni_1.hp"
+        , "k" : 12, "expected" : false, "expectsWitness" : true, "ahOpts" : "--incl-spot", "ahWitnessOpts" : "--incl-spot" }
+    ,
+    "cni_any_2":
+        { "smv" : ["cni_any_2.smv","cni_any_2.smv"]
+        , "hp" : "cni_2.hp"
+        , "k" : 22, "expected" : false, "expectsWitness" : true, "ahOpts" : "--incl-spot", "ahWitnessOpts" : "--incl-spot" }
+    ,
+    "cni_any_3":
+        { "smv" : ["cni_any_3.smv","cni_any_3.smv"]
+        , "hp" : "cni_3.hp"
+        , "k" : 22, "expected" : false, "expectsWitness" : true, "ahOpts" : "--incl-forq", "ahWitnessOpts" : "--incl-forq" }
+    ,
+    "cni_any_4":
+        { "smv" : ["cni_any_4.smv","cni_any_4.smv"]
+        , "hp" : "cni_4.hp"
+        , "k" : 22, "expected" : false, "expectsWitness" : true, "ahOpts" : "--incl-forq", "ahWitnessOpts" : "--incl-forq" }
+    ,
+    
+    "cni_lte_1":
+        { "smv" : ["cni_lte_1.smv","cni_lte_1.smv"]
+        , "asmv" : ["cni_lte_assigns_1.smv","cni_lte_assigns_1.smv"]
+        , "hp" : "cni_1.hp"
+        , "ahp" : "cni_assigns_1.ah"
+        , "k" : 2, "expected" : false, "expectsWitness" : true, "ahOpts" : "--incl-spot", "ahWitnessOpts" : "--incl-spot" }
+    ,
+    "cni_lte_2":
+        { "smv" : ["cni_lte_2.smv","cni_lte_2.smv"]
+        , "asmv" : ["cni_lte_assigns_2.smv","cni_lte_assigns_2.smv"]
+        , "hp" : "cni_2.hp"
+        , "ahp" : "cni_assigns_2.ah"
+        , "k" : 23, "expected" : false, "expectsWitness" : true, "ahOpts" : "--incl-spot", "ahWitnessOpts" : "--incl-spot" }
+    ,
+    "cni_lte_3":
+        { "smv" : ["cni_lte_3.smv","cni_lte_3.smv"]
+        , "asmv" : ["cni_lte_assigns_3.smv","cni_lte_assigns_3.smv"]
+        , "hp" : "cni_3.hp"
+        , "ahp" : "cni_assigns_3.ah"
+        , "k" : 24, "expected" : true, "expectsWitness" : false, "ahOpts" : "--incl-forq", "ahWitnessOpts" : "--incl-forq" }
+    ,
+    "cni_lte_4":
+        { "smv" : ["cni_lte_4.smv","cni_lte_4.smv"]
+        , "asmv" : ["cni_lte_assigns_4.smv","cni_lte_assigns_4.smv"]
+        , "hp" : "cni_4.hp"
+        , "ahp" : "cni_assigns_4.ah"
+        , "k" : 22, "expected" : true, "expectsWitness" : false, "ahOpts" : "--incl-forq", "ahWitnessOpts" : "--incl-forq" }
+    
+    }
+}
+

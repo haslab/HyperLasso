@@ -1,0 +1,517 @@
+-----------------------------------------------------------------------------
+-- |
+-- Module    : Data.SBV.Core.Kind
+-- Copyright : (c) Levent Erkok
+-- License   : BSD3
+-- Maintainer: erkokl@gmail.com
+-- Stability : experimental
+--
+-- Internal data-structures for the sbv library
+-----------------------------------------------------------------------------
+
+{-# LANGUAGE CPP                  #-}
+{-# LANGUAGE DataKinds            #-}
+{-# LANGUAGE DeriveAnyClass       #-}
+{-# LANGUAGE DeriveDataTypeable   #-}
+{-# LANGUAGE DeriveGeneric        #-}
+{-# LANGUAGE FlexibleInstances    #-}
+{-# LANGUAGE LambdaCase           #-}
+{-# LANGUAGE ScopedTypeVariables  #-}
+{-# LANGUAGE TypeApplications     #-}
+{-# LANGUAGE TypeFamilies         #-}
+{-# LANGUAGE TypeOperators        #-}
+{-# LANGUAGE ViewPatterns         #-}
+{-# LANGUAGE UndecidableInstances #-}
+
+{-# OPTIONS_GHC -Wall -Werror -fno-warn-orphans #-}
+
+module Data.SBV.Core.Kind (
+          Kind(..), HasKind(..), smtType, hasUninterpretedSorts
+        , BVIsNonZero, ValidFloat, intOfProxy
+        , showBaseKind, needsFlattening
+        , eqCheckIsObjectEq, containsFloats, isSomeKindOfFloat, expandKinds
+        , substituteADTVars
+        , kRoundingMode
+        ) where
+
+import qualified Data.Generics as G (Data(..), DataType, dataTypeName, tyconUQname)
+
+import Data.Char (isSpace)
+import Data.Int
+import Data.Word
+import Data.SBV.Core.AlgReals
+
+import Data.Proxy
+import Data.Kind
+
+import Data.List (intercalate, sort)
+import Control.DeepSeq (NFData)
+
+import Data.Containers.ListUtils (nubOrd)
+
+import Data.Typeable (Typeable)
+import Data.Type.Bool
+import Data.Type.Equality
+
+import GHC.TypeLits
+
+import Data.SBV.Utils.Lib     (isKString)
+import Data.SBV.Utils.Numeric (RoundingMode)
+
+import GHC.Generics
+import qualified Data.Generics.Uniplate.Data as G
+
+-- | Kind of symbolic value
+data Kind =
+          -- Base types
+            KBool
+
+          -- Word and Int. Boolean is True for Int.
+          | KBounded !Bool !Int
+
+          -- Unbounded integers
+          | KUnbounded
+
+          -- Reals
+          | KReal
+
+          -- Floats, standard and generalized
+          | KFloat
+          | KDouble
+          | KFP !Int !Int
+
+          -- Rationals
+          | KRational
+
+          -- Chars and strings
+          | KChar
+          | KString
+
+          -- Algebraic datatypes
+          | KVar String         -- only used temporarily during ADT construction
+          | KApp String [Kind]  -- Application of a constructor to a bunch of types
+          | KADT String
+                 [(String, Kind)]   -- Parameters, applied to these args
+                 [(String, [Kind])] -- Constructors, and their fields
+
+          -- Collections
+          | KList Kind
+          | KSet  Kind
+          | KTuple [Kind]
+
+          -- Arrays
+          | KArray  Kind Kind
+          deriving (Eq, Ord, G.Data, NFData, Generic)
+
+-- | Built in kind for rounding mode
+kRoundingMode :: Kind
+kRoundingMode = KADT "RoundingMode" [] (map (\r -> (show r, [])) [minBound .. maxBound :: RoundingMode])
+
+-- | Expand such that the resulting list has all the kinds we touch
+expandKinds :: Kind -> [Kind]
+expandKinds = sort . nubOrd . G.universe
+
+-- | For an ADT kind, substitute kinds for the variables.
+substituteADTVars :: String -> [(String, Kind)] -> Kind -> Kind
+substituteADTVars t dict = G.transform sub
+  where sub :: Kind -> Kind
+        sub (KVar v)
+          | Just k <- v `lookup` dict = k
+          | True                      = error $ "Data.SBV.ADT: Kind find variable in param subst: " ++ show (t, v, dict)
+        sub k = k
+
+-- | The interesting about the show instance is that it can tell apart two kinds nicely. Otherwise the string produced isn't parsed back.
+instance Show Kind where
+  show (KVar s)           = s
+  show KBool              = "SBool"
+  show (KBounded False n) = pickType n "SWord" "SWord " ++ show n
+  show (KBounded True n)  = pickType n "SInt"  "SInt "  ++ show n
+  show KUnbounded         = "SInteger"
+  show KReal              = "SReal"
+  show (KApp c ks)        = unwords (c : map (kindParen . showBaseKind      )  ks)
+  show (KADT s pks _)     = unwords (s : map (kindParen . showBaseKind . snd) pks)
+  show KFloat             = "SFloat"
+  show KDouble            = "SDouble"
+  show (KFP eb sb)        = "SFloatingPoint " ++ show eb ++ " " ++ show sb
+  show KString            = "SString"
+  show KChar              = "SChar"
+  show (KList e)          = "[" ++ show e ++ "]"
+  show (KSet  e)          = "{" ++ show e ++ "}"
+  show (KTuple m)         = "(" ++ intercalate ", " (show <$> m) ++ ")"
+  show KRational          = "SRational"
+  show (KArray k1 k2)     = "SArray "  ++ kindParen (showBaseKind k1) ++ " " ++ kindParen (showBaseKind k2)
+
+-- | A version of show for kinds that says Bool instead of SBool, Float instead of SFloat, etc.
+showBaseKind :: Kind -> String
+showBaseKind = sh
+  where sh (KVar s)           = s
+        sh k@KBool            = noS (show k)
+        sh (KBounded False n) = pickType n "Word" "WordN " ++ show n
+        sh (KBounded True n)  = pickType n "Int"  "IntN "  ++ show n
+        sh (KApp s ks)        = unwords (s : map (kindParen . sh) ks)
+        sh k@KUnbounded       = noS (show k)
+        sh k@KReal            = noS (show k)
+        sh k@KADT{}           = show k     -- Leave user-sorts untouched!
+        sh k@KFloat           = noS (show k)
+        sh k@KDouble          = noS (show k)
+        sh k@KFP{}            = noS (show k)
+        sh k@KChar            = noS (show k)
+        sh k@KString          = noS (show k)
+        sh KRational          = "Rational"
+        sh (KList k)          = "[" ++ sh k ++ "]"
+        sh (KSet k)           = "{" ++ sh k ++ "}"
+        sh (KTuple ks)        = "(" ++ intercalate ", " (map sh ks) ++ ")"
+        sh (KArray  k1 k2)    = "Array "  ++ kindParen (sh k1) ++ " " ++ kindParen (sh k2)
+
+        -- Drop the initial S if it's there
+        noS ('S':s) = s
+        noS s       = s
+
+-- For historical reasons, we show 8-16-32-64 bit values with no space; others with a space.
+pickType :: Int -> String -> String -> String
+pickType i standard other
+  | i `elem` [8, 16, 32, 64] = standard
+  | True                     = other
+
+-- | Put parens if necessary. This test is rather crummy, but seems to work ok
+kindParen :: String -> String
+kindParen s@('[':_) = s
+kindParen s@('(':_) = s
+kindParen s | any isSpace s = '(' : s ++ ")"
+            | True          = s
+
+-- | How the type maps to SMT land
+smtType :: Kind -> String
+smtType (KVar s)        = s
+smtType KBool           = "Bool"
+smtType (KBounded _ sz) = "(_ BitVec " ++ show sz ++ ")"
+smtType KUnbounded      = "Int"
+smtType KReal           = "Real"
+smtType KFloat          = "(_ FloatingPoint  8 24)"
+smtType KDouble         = "(_ FloatingPoint 11 53)"
+smtType (KFP eb sb)     = "(_ FloatingPoint " ++ show eb ++ " " ++ show sb ++ ")"
+smtType KString         = "String"
+smtType KChar           = "String"
+smtType (KList k)       = "(Seq "   ++ smtType k ++ ")"
+smtType (KSet  k)       = "(Array " ++ smtType k ++ " Bool)"
+smtType (KApp s ks)     = kindParen $ unwords (s : map smtType          ks)
+smtType (KADT s pks _)  = kindParen $ unwords (s : map (smtType . snd) pks)
+smtType (KTuple [])     = "SBVTuple0"
+smtType (KTuple kinds)  = "(SBVTuple" ++ show (length kinds) ++ " " ++ unwords (smtType <$> kinds) ++ ")"
+smtType KRational       = "SBVRational"
+smtType (KArray  k1 k2) = "(Array "      ++ smtType k1 ++ " " ++ smtType k2 ++ ")"
+
+instance Eq  G.DataType where
+   a == b = G.tyconUQname (G.dataTypeName a) == G.tyconUQname (G.dataTypeName b)
+
+instance Ord G.DataType where
+   a `compare` b = G.tyconUQname (G.dataTypeName a) `compare` G.tyconUQname (G.dataTypeName b)
+
+-- | Does this kind represent a signed quantity?
+kindHasSign :: Kind -> Bool
+kindHasSign = \case KVar _       -> False
+                    KBool        -> False
+                    KBounded b _ -> b
+                    KUnbounded   -> True
+                    KReal        -> True
+                    KFloat       -> True
+                    KDouble      -> True
+                    KFP{}        -> True
+                    KRational    -> True
+                    KApp{}       -> False
+                    KADT{}       -> False
+                    KString      -> False
+                    KChar        -> False
+                    KList{}      -> False
+                    KSet{}       -> False
+                    KTuple{}     -> False
+                    KArray{}     -> False
+
+-- | A class for capturing values that have a sign and a size (finite or infinite)
+-- minimal complete definition: kindOf, unless you can take advantage of the default
+-- signature: This class can be automatically derived for data-types that have
+-- a 'G.Data' instance; this is useful for creating uninterpreted sorts. So, in
+-- reality, end users should almost never need to define any methods.
+class HasKind a where
+  kindOf          :: a -> Kind
+  hasSign         :: a -> Bool
+  intSizeOf       :: a -> Int
+  isBoolean       :: a -> Bool
+  isBounded       :: a -> Bool   -- NB. This really means word/int; i.e., Real/Float will test False
+  isReal          :: a -> Bool
+  isFloat         :: a -> Bool
+  isDouble        :: a -> Bool
+  isRational      :: a -> Bool
+  isFP            :: a -> Bool
+  isUnbounded     :: a -> Bool
+  isADT           :: a -> Bool
+  isChar          :: a -> Bool
+  isString        :: a -> Bool
+  isList          :: a -> Bool
+  isSet           :: a -> Bool
+  isTuple         :: a -> Bool
+  isArray         :: a -> Bool
+  isRoundingMode  :: a -> Bool
+  isUninterpreted :: a -> Bool
+
+  showType        :: a -> String
+
+  -- defaults
+  hasSign x = kindHasSign (kindOf x)
+
+  intSizeOf x = case kindOf x of
+                  KVar{}        -> error "SBV.HasKind.intSizeOf(KVar)"
+                  KBool         -> error "SBV.HasKind.intSizeOf((S)Bool)"
+                  KBounded _ s  -> s
+                  KUnbounded    -> error "SBV.HasKind.intSizeOf((S)Integer)"
+                  KReal         -> error "SBV.HasKind.intSizeOf((S)Real)"
+                  KFloat        -> 32
+                  KDouble       -> 64
+                  KFP i j       -> i + j
+                  KRational     -> error "SBV.HasKind.intSizeOf((S)Rational)"
+                  KApp s _      -> error $ "SBV.HasKind.intSizeOf: Type application: "    ++ s
+                  KADT s _ _    -> error $ "SBV.HasKind.intSizeOf: Algebraic data type: " ++ s
+                  KString       -> error "SBV.HasKind.intSizeOf((S)Double)"
+                  KChar         -> error "SBV.HasKind.intSizeOf((S)Char)"
+                  KList ek      -> error $ "SBV.HasKind.intSizeOf((S)List)"   ++ show ek
+                  KSet  ek      -> error $ "SBV.HasKind.intSizeOf((S)Set)"    ++ show ek
+                  KTuple tys    -> error $ "SBV.HasKind.intSizeOf((S)Tuple)"  ++ show tys
+                  KArray  k1 k2 -> error $ "SBV.HasKind.intSizeOf((S)Array)"  ++ show (k1, k2)
+
+  isBoolean       (kindOf -> KBool{})      = True
+  isBoolean       _                        = False
+
+  isBounded       (kindOf -> KBounded{})   = True
+  isBounded       _                        = False
+
+  isReal          (kindOf -> KReal{})      = True
+  isReal          _                        = False
+
+  isFloat         (kindOf -> KFloat{})     = True
+  isFloat         _                        = False
+
+  isDouble        (kindOf -> KDouble{})    = True
+  isDouble        _                        = False
+
+  isFP            (kindOf -> KFP{})        = True
+  isFP            _                        = False
+
+  isRational      (kindOf -> KRational{})  = True
+  isRational      _                        = False
+
+  isUnbounded     (kindOf -> KUnbounded{}) = True
+  isUnbounded     _                        = False
+
+  isADT           (kindOf -> KADT{})       = True
+  isADT           _                        = False
+
+  isChar          (kindOf -> KChar{})      = True
+  isChar          _                        = False
+
+  isString        (kindOf -> KString{})    = True
+  isString        _                        = False
+
+  isList          (kindOf -> KList{})      = True
+  isList          _                        = False
+
+  isSet           (kindOf -> KSet{})       = True
+  isSet           _                        = False
+
+  isTuple         (kindOf -> KTuple{})     = True
+  isTuple         _                        = False
+
+  isArray         (kindOf -> KArray{})     = True
+  isArray         _                        = False
+
+  -- Derived kinds
+  isRoundingMode  (kindOf -> k)            = k == kRoundingMode
+  isUninterpreted (kindOf -> k)            = case k of
+                                               KADT _ [] [] -> True
+                                               _            -> False
+
+  showType = show . kindOf
+
+  {-# MINIMAL kindOf #-}
+
+-- | This instance allows us to use the `kindOf (Proxy @a)` idiom instead of
+-- the `kindOf (undefined :: a)`, which is safer and looks more idiomatic.
+instance HasKind a => HasKind (Proxy a) where
+  kindOf _ = kindOf (undefined :: a)
+
+instance HasKind Bool         where kindOf _ = KBool
+instance HasKind Int8         where kindOf _ = KBounded True  8
+instance HasKind Word8        where kindOf _ = KBounded False 8
+instance HasKind Int16        where kindOf _ = KBounded True  16
+instance HasKind Word16       where kindOf _ = KBounded False 16
+instance HasKind Int32        where kindOf _ = KBounded True  32
+instance HasKind Word32       where kindOf _ = KBounded False 32
+instance HasKind Int64        where kindOf _ = KBounded True  64
+instance HasKind Word64       where kindOf _ = KBounded False 64
+instance HasKind Integer      where kindOf _ = KUnbounded
+instance HasKind AlgReal      where kindOf _ = KReal
+instance HasKind Rational     where kindOf _ = KRational
+instance HasKind Float        where kindOf _ = KFloat
+instance HasKind Double       where kindOf _ = KDouble
+instance HasKind Char         where kindOf _ = KChar
+instance HasKind RoundingMode where kindOf _ = kRoundingMode
+
+-- | Grab the bit-size from the proxy. If the nat is too large to fit in an int,
+-- we throw an error. (This would mean too big of a bit-size, that we can't
+-- really deal with in any practical realm.) In fact, even the range allowed
+-- by this conversion (i.e., the entire range of a 64-bit int) is just impractical,
+-- but it's hard to come up with a better bound.
+intOfProxy :: KnownNat n => Proxy n -> Int
+intOfProxy p
+  | iv == fromIntegral r = r
+  | True                 = error $ unlines [ "Data.SBV: Too large bit-vector size: " ++ show iv
+                                           , ""
+                                           , "No reasonable proof can be performed with such large bit vectors involved,"
+                                           , "So, cowardly refusing to proceed any further! Please file this as a"
+                                           , "feature request."
+                                           ]
+  where iv :: Integer
+        iv = natVal p
+
+        r :: Int
+        r  = fromEnum iv
+
+-- | Is this a type we can safely do equality on? Essentially it avoids floats (@NaN@ /= @NaN@, @+0 = -0@), and reals (due
+-- to the possible presence of non-exact rationals. In short, this will return True if there are no floats/reals under the hood.
+eqCheckIsObjectEq :: Kind -> Bool
+eqCheckIsObjectEq = not . any bad . expandKinds
+  where bad KReal   = True
+        bad k       = isSomeKindOfFloat k
+
+-- | Same as above, except only for floats
+containsFloats :: Kind -> Bool
+containsFloats = any isSomeKindOfFloat . expandKinds
+
+-- | Is some sort of a float?
+isSomeKindOfFloat :: Kind -> Bool
+isSomeKindOfFloat k = isFloat k || isDouble k || isFP k
+
+-- | Do we have a completely uninterpreted sort lying around anywhere?
+hasUninterpretedSorts :: Kind -> Bool
+hasUninterpretedSorts = any isUninterpreted . expandKinds
+
+instance (Typeable a, HasKind a) => HasKind [a] where
+   kindOf x | isKString @[a] x = KString
+            | True             = KList (kindOf (Proxy @a))
+
+instance HasKind Kind where
+  kindOf = id
+
+instance HasKind () where
+  kindOf _ = KTuple []
+
+instance (HasKind a, HasKind b) => HasKind (a, b) where
+  kindOf _ = KTuple [kindOf (Proxy @a), kindOf (Proxy @b)]
+
+instance (HasKind a, HasKind b, HasKind c) => HasKind (a, b, c) where
+  kindOf _ = KTuple [kindOf (Proxy @a), kindOf (Proxy @b), kindOf (Proxy @c)]
+
+instance (HasKind a, HasKind b, HasKind c, HasKind d) => HasKind (a, b, c, d) where
+  kindOf _ = KTuple [kindOf (Proxy @a), kindOf (Proxy @b), kindOf (Proxy @c), kindOf (Proxy @d)]
+
+instance (HasKind a, HasKind b, HasKind c, HasKind d, HasKind e) => HasKind (a, b, c, d, e) where
+  kindOf _ = KTuple [kindOf (Proxy @a), kindOf (Proxy @b), kindOf (Proxy @c), kindOf (Proxy @d), kindOf (Proxy @e)]
+
+instance (HasKind a, HasKind b, HasKind c, HasKind d, HasKind e, HasKind f) => HasKind (a, b, c, d, e, f) where
+  kindOf _ = KTuple [kindOf (Proxy @a), kindOf (Proxy @b), kindOf (Proxy @c), kindOf (Proxy @d), kindOf (Proxy @e), kindOf (Proxy @f)]
+
+instance (HasKind a, HasKind b, HasKind c, HasKind d, HasKind e, HasKind f, HasKind g) => HasKind (a, b, c, d, e, f, g) where
+  kindOf _ = KTuple [kindOf (Proxy @a), kindOf (Proxy @b), kindOf (Proxy @c), kindOf (Proxy @d), kindOf (Proxy @e), kindOf (Proxy @f), kindOf (Proxy @g)]
+
+instance (HasKind a, HasKind b, HasKind c, HasKind d, HasKind e, HasKind f, HasKind g, HasKind h) => HasKind (a, b, c, d, e, f, g, h) where
+  kindOf _ = KTuple [kindOf (Proxy @a), kindOf (Proxy @b), kindOf (Proxy @c), kindOf (Proxy @d), kindOf (Proxy @e), kindOf (Proxy @f), kindOf (Proxy @g), kindOf (Proxy @h)]
+
+instance (HasKind a, HasKind b) => HasKind (a -> b) where
+  kindOf _ = KArray (kindOf (Proxy @a)) (kindOf (Proxy @b))
+
+-- | Should we ask the solver to flatten the output? This comes in handy so output is parseable
+-- Essentially, we're being conservative here and simply requesting flattening anything that has
+-- some structure to it.
+needsFlattening :: Kind -> Bool
+needsFlattening = any check . expandKinds
+  where check KList{}     = True
+        check KSet{}      = True
+        check KTuple{}    = True
+        check KArray{}    = True
+        check KApp{}      = True
+        check k@KADT{}    = not (isUninterpreted k || isRoundingMode k)
+
+        -- no need to expand bases
+        check KVar{}      = False
+        check KBool       = False
+        check KBounded{}  = False
+        check KUnbounded  = False
+        check KReal       = False
+        check KFloat      = False
+        check KDouble     = False
+        check KFP{}       = False
+        check KChar       = False
+        check KString     = False
+        check KRational   = False
+
+-- | Catch 0-width cases
+type BVZeroWidth = 'Text "Zero-width bit-vectors are not allowed."
+
+-- | Type family to create the appropriate non-zero constraint
+type family BVIsNonZero (arg :: Nat) :: Constraint where
+   BVIsNonZero 0 = TypeError BVZeroWidth
+   BVIsNonZero _ = ()
+
+-- Allowed sizes for floats, imposed by LibBF.
+--
+-- NB. In LibBF bindings (and libbf itself as well), minimum number of exponent bits is specified as 3. But this
+-- seems unnecessarily restrictive; that constant doesn't seem to be used anywhere, and furthermore my tests with sb = 2
+-- didn't reveal anything going wrong. I emailed the author of libbf regarding this, and he said:
+--
+--   I had no clear reason to use BF_EXP_BITS_MIN = 3. So if "2" is OK then
+--   why not. The important is that the basic operations are OK. It is likely
+--   there are tricky cases in the transcendental operations but even with
+--   large exponents libbf may have problems with them !
+--
+-- So, in SBV, we allow sb == 2. If this proves problematic, change the number below in definition of FP_MIN_EB to 3!
+--
+-- NB. It would be nice if we could use the LibBF constants expBitsMin, expBitsMax, precBitsMin, precBitsMax
+-- for determining the valid range. Unfortunately this doesn't seem to be possible.
+-- So, we use CPP to work-around that.
+#define FP_MIN_EB 2
+#define FP_MIN_SB 2
+#if WORD_SIZE_IN_BITS == 64
+#define FP_MAX_EB 61
+#define FP_MAX_SB 4611686018427387902
+#else
+#define FP_MAX_EB 29
+#define FP_MAX_SB 1073741822
+#endif
+
+-- | Catch an invalid FP.
+type InvalidFloat (eb :: Nat) (sb :: Nat)
+        =     'Text "Invalid floating point type `SFloatingPoint " ':<>: 'ShowType eb ':<>: 'Text " " ':<>: 'ShowType sb ':<>: 'Text "'"
+        ':$$: 'Text ""
+        ':$$: 'Text "A valid float of type 'SFloatingPoint eb sb' must satisfy:"
+        ':$$: 'Text "     eb `elem` [" ':<>: 'ShowType FP_MIN_EB ':<>: 'Text " .. " ':<>: 'ShowType FP_MAX_EB ':<>: 'Text "]"
+        ':$$: 'Text "     sb `elem` [" ':<>: 'ShowType FP_MIN_SB ':<>: 'Text " .. " ':<>: 'ShowType FP_MAX_SB ':<>: 'Text "]"
+        ':$$: 'Text ""
+        ':$$: 'Text "Given type falls outside of this range, or the sizes are not known naturals."
+
+-- | A valid float has restrictions on eb/sb values.
+-- NB. In the below encoding, I found that CPP is very finicky about substitution of the machine-dependent
+-- macros. If you try to put the conditionals in the same line, it fails to substitute for some reason. Hence the awkward spacing.
+-- Filed this as a bug report for CPPHS at <https://github.com/malcolmwallace/cpphs/issues/25>.
+type family ValidFloat (eb :: Nat) (sb :: Nat) :: Constraint where
+  ValidFloat (eb :: Nat) (sb :: Nat) = ( KnownNat eb
+                                       , KnownNat sb
+                                       , If (   (   eb `CmpNat` FP_MIN_EB == 'EQ
+                                                 || eb `CmpNat` FP_MIN_EB == 'GT)
+                                             && (   eb `CmpNat` FP_MAX_EB == 'EQ
+                                                 || eb `CmpNat` FP_MAX_EB == 'LT)
+                                             && (   sb `CmpNat` FP_MIN_SB == 'EQ
+                                                 || sb `CmpNat` FP_MIN_SB == 'GT)
+                                             && (   sb `CmpNat` FP_MAX_SB == 'EQ
+                                                 || sb `CmpNat` FP_MAX_SB == 'LT))
+                                            (() :: Constraint)
+                                            (TypeError (InvalidFloat eb sb))
+                                       )

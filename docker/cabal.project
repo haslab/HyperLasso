@@ -1,0 +1,7 @@
+
+-- install package versions from a LTS, for greater stability
+-- we have however changed the LTS version of SBV, since we use a custom version
+import: lts-24.38+sbv.config
+
+packages:
+  deps/*/*.cabal, *.cabal 

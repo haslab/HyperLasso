@@ -1,0 +1,10 @@
+MODULE main
+VAR
+    pc_0 : 0..5;
+    number_0 : 0..1;
+    tmp_0 : 0..1;
+INIT
+    pc_0 = 0 & number_0 = 0
+TRANS
+    ((pc_0 = 0 & next(pc_0) = 1 & next(number_0) = number_0 & next(tmp_0) = tmp_0 | pc_0 = 1  & next(pc_0) = 2 & next(number_0) = number_0 & next(tmp_0) = number_0 | pc_0 = 2 & next(pc_0) = 3 & next(number_0) = tmp_0 + 1 & next(tmp_0) = tmp_0 | pc_0 = 3  & next(pc_0) = 4 & next(number_0) = number_0 & next(tmp_0) = tmp_0 | pc_0 = 3  & FALSE & next(pc_0) = 3 & next(number_0) = number_0 & next(tmp_0) = tmp_0 | pc_0 = 4 & next(pc_0) = 5 & next(number_0) = number_0 & next(tmp_0) = tmp_0 | pc_0 = 5 & next(pc_0) = 0 & next(number_0) = 0 & next(tmp_0) = tmp_0)) |
+    (next(pc_0) = pc_0 & next(number_0) = number_0 & next(tmp_0) = tmp_0)

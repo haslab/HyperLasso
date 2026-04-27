@@ -1,0 +1,1 @@
+forall A. exists B. F ({"a"_A} & {"a"_B})

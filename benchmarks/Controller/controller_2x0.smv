@@ -1,0 +1,15 @@
+MODULE main
+VAR
+    default_to_0 : 0..1;
+    default_green_left_0 : boolean;
+    default_green_right_0 : boolean;
+    default_to_1 : 0..1;
+    default_green_left_1 : boolean;
+    default_green_right_1 : boolean;
+ASSIGN
+    next(default_to_0) := default_to_0;
+    next(default_green_left_0) := default_green_left_0;
+    next(default_green_right_0) := default_green_right_0;
+    next(default_to_1) := default_to_1;
+    next(default_green_left_1) := default_green_left_1;
+    next(default_green_right_1) := default_green_right_1;

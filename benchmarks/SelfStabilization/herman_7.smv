@@ -1,0 +1,58 @@
+MODULE main
+VAR
+    token0 : boolean;
+    token1 : boolean;
+    token2 : boolean;
+    token3 : boolean;
+    token4 : boolean;
+    token5 : boolean;
+    token6 : boolean;
+    sched : 0..6;
+    coin : boolean;
+DEFINE
+    stable := (token0 & !token1 & !token2 & !token3 & !token4 & !token5 & !token6) | (!token0 & token1 & !token2 & !token3 & !token4 & !token5 & !token6) | (!token0 & !token1 & token2 & !token3 & !token4 & !token5 & !token6) | (!token0 & !token1 & !token2 & token3 & !token4 & !token5 & !token6) | (!token0 & !token1 & !token2 & !token3 & token4 & !token5 & !token6) | (!token0 & !token1 & !token2 & !token3 & !token4 & token5 & !token6) | (!token0 & !token1 & !token2 & !token3 & !token4 & !token5 & token6);
+INIT
+    token0 | token1 | token2 | token3 | token4 | token5 | token6;
+ASSIGN
+    next(token0) := case
+        sched = 0 & token0 & coin : FALSE;
+        sched = 0 & token0 & !coin : TRUE;
+        sched = 6 & token6 & coin : TRUE;
+        TRUE : token0;
+    esac;
+    next(token1) := case
+        sched = 1 & token1 & coin : FALSE;
+        sched = 1 & token1 & !coin : TRUE;
+        sched = 0 & token0 & coin : TRUE;
+        TRUE : token1;
+    esac;
+    next(token2) := case
+        sched = 2 & token2 & coin : FALSE;
+        sched = 2 & token2 & !coin : TRUE;
+        sched = 1 & token1 & coin : TRUE;
+        TRUE : token2;
+    esac;
+    next(token3) := case
+        sched = 3 & token3 & coin : FALSE;
+        sched = 3 & token3 & !coin : TRUE;
+        sched = 2 & token2 & coin : TRUE;
+        TRUE : token3;
+    esac;
+    next(token4) := case
+        sched = 4 & token4 & coin : FALSE;
+        sched = 4 & token4 & !coin : TRUE;
+        sched = 3 & token3 & coin : TRUE;
+        TRUE : token4;
+    esac;
+    next(token5) := case
+        sched = 5 & token5 & coin : FALSE;
+        sched = 5 & token5 & !coin : TRUE;
+        sched = 4 & token4 & coin : TRUE;
+        TRUE : token5;
+    esac;
+    next(token6) := case
+        sched = 6 & token6 & coin : FALSE;
+        sched = 6 & token6 & !coin : TRUE;
+        sched = 5 & token5 & coin : TRUE;
+        TRUE : token6;
+    esac;

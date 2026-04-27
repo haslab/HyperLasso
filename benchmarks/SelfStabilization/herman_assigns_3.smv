@@ -1,0 +1,28 @@
+MODULE main
+VAR
+    token0 : boolean;
+    token1 : boolean;
+    token2 : boolean;
+    sched : 0..2;
+    coin : boolean;
+DEFINE
+    stable := (token0 & !token1 & !token2) | (!token0 & token1 & !token2) | (!token0 & !token1 & token2);
+ASSIGN
+    next(token0) := case
+        sched = 0 & token0 & coin : FALSE;
+        sched = 0 & token0 & !coin : FALSE;
+        sched = 2 & token2 & coin : TRUE;
+        TRUE : token0;
+    esac;
+    next(token1) := case
+        sched = 1 & token1 & coin : FALSE;
+        sched = 1 & token1 & !coin : FALSE;
+        sched = 0 & token0 & coin : TRUE;
+        TRUE : token1;
+    esac;
+    next(token2) := case
+        sched = 2 & token2 & coin : FALSE;
+        sched = 2 & token2 & !coin : FALSE;
+        sched = 1 & token1 & coin : TRUE;
+        TRUE : token2;
+    esac;

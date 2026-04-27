@@ -1,0 +1,43 @@
+MODULE main
+VAR
+    reads_0_0 : 0..2;
+    writes_0_0 : 0..2;
+    reads_0_1 : 0..2;
+    writes_0_1 : 0..2;
+    reads_1_0 : 0..2;
+    writes_1_0 : 0..2;
+    reads_1_1 : 0..2;
+    writes_1_1 : 0..2;
+    reads_2_0 : 0..2;
+    writes_2_0 : 0..2;
+    reads_2_1 : 0..2;
+    writes_2_1 : 0..2;
+    t : 0..3;
+    installed_0 : boolean;
+    installed_1 : boolean;
+    installed_2 : boolean;
+    value_0 : 0..2;
+    value_1 : 0..2;
+ASSIGN
+    next(reads_0_0) := reads_0_0;
+    next(writes_0_0) := writes_0_0;
+    next(reads_0_1) := reads_0_1;
+    next(writes_0_1) := writes_0_1;
+    next(reads_1_0) := reads_1_0;
+    next(writes_1_0) := writes_1_0;
+    next(reads_1_1) := reads_1_1;
+    next(writes_1_1) := writes_1_1;
+    next(reads_2_0) := reads_2_0;
+    next(writes_2_0) := writes_2_0;
+    next(reads_2_1) := reads_2_1;
+    next(writes_2_1) := writes_2_1;
+    init(installed_0) := FALSE;
+    next(installed_0) := case ((t = 0 & !installed_0 & (reads_0_0 = 0 | (reads_0_0 = writes_1_0 & installed_1 | reads_0_0 = writes_2_0 & installed_2)) & (reads_0_1 = 0 | (reads_0_1 = writes_1_1 & installed_1 | reads_0_1 = writes_2_1 & installed_2)))): TRUE; TRUE: installed_0; esac;
+    init(installed_1) := FALSE;
+    next(installed_1) := case ((t = 1 & !installed_1 & (reads_1_0 = 0 | (reads_1_0 = writes_0_0 & installed_0 | reads_1_0 = writes_2_0 & installed_2)) & (reads_1_1 = 0 | (reads_1_1 = writes_0_1 & installed_0 | reads_1_1 = writes_2_1 & installed_2)))): TRUE; TRUE: installed_1; esac;
+    init(installed_2) := FALSE;
+    next(installed_2) := case ((t = 2 & !installed_2 & (reads_2_0 = 0 | (reads_2_0 = writes_0_0 & installed_0 | reads_2_0 = writes_1_0 & installed_1)) & (reads_2_1 = 0 | (reads_2_1 = writes_0_1 & installed_0 | reads_2_1 = writes_1_1 & installed_1)))): TRUE; TRUE: installed_2; esac;
+    init(value_0) := 0;
+    next(value_0) := case ((t = 0 & !installed_0 & (reads_0_0 = 0 | (reads_0_0 = writes_1_0 & installed_1 | reads_0_0 = writes_2_0 & installed_2)) & (reads_0_1 = 0 | (reads_0_1 = writes_1_1 & installed_1 | reads_0_1 = writes_2_1 & installed_2))) & writes_0_0 > 0): writes_0_0; ((t = 1 & !installed_1 & (reads_1_0 = 0 | (reads_1_0 = writes_0_0 & installed_0 | reads_1_0 = writes_2_0 & installed_2)) & (reads_1_1 = 0 | (reads_1_1 = writes_0_1 & installed_0 | reads_1_1 = writes_2_1 & installed_2))) & writes_1_0 > 0): writes_1_0; ((t = 2 & !installed_2 & (reads_2_0 = 0 | (reads_2_0 = writes_0_0 & installed_0 | reads_2_0 = writes_1_0 & installed_1)) & (reads_2_1 = 0 | (reads_2_1 = writes_0_1 & installed_0 | reads_2_1 = writes_1_1 & installed_1))) & writes_2_0 > 0): writes_2_0; TRUE: value_0; esac;
+    init(value_1) := 0;
+    next(value_1) := case ((t = 0 & !installed_0 & (reads_0_0 = 0 | (reads_0_0 = writes_1_0 & installed_1 | reads_0_0 = writes_2_0 & installed_2)) & (reads_0_1 = 0 | (reads_0_1 = writes_1_1 & installed_1 | reads_0_1 = writes_2_1 & installed_2))) & writes_0_1 > 0): writes_0_1; ((t = 1 & !installed_1 & (reads_1_0 = 0 | (reads_1_0 = writes_0_0 & installed_0 | reads_1_0 = writes_2_0 & installed_2)) & (reads_1_1 = 0 | (reads_1_1 = writes_0_1 & installed_0 | reads_1_1 = writes_2_1 & installed_2))) & writes_1_1 > 0): writes_1_1; ((t = 2 & !installed_2 & (reads_2_0 = 0 | (reads_2_0 = writes_0_0 & installed_0 | reads_2_0 = writes_1_0 & installed_1)) & (reads_2_1 = 0 | (reads_2_1 = writes_0_1 & installed_0 | reads_2_1 = writes_1_1 & installed_1))) & writes_2_1 > 0): writes_2_1; TRUE: value_1; esac;

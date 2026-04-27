@@ -1,0 +1,14 @@
+MODULE main
+
+VAR
+    l : 0..1;
+
+ASSIGN
+    init(l) := 0;
+    next(l) := case
+        l = 0 : {0,1};
+        TRUE : {0,1};
+    esac;
+
+DEFINE
+    a := (l = 0);

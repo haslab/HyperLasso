@@ -1,0 +1,3 @@
+[submodule "docker/AutoHyper"]
+	path = docker/AutoHyper
+	url = https://github.com/hpacheco/AutoHyper

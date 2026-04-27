@@ -1,0 +1,16 @@
+{-# LANGUAGE QuasiQuotes #-}
+
+{-# OPTIONS_GHC -Wall -Werror #-}
+
+module T where
+
+import Expr
+import Data.SBV
+
+-- Rejected at the top level
+[sCase|Expr e of
+        Zero  -> 0
+        Num i -> i
+      |]
+
+{- HLint ignore module "Unused LANGUAGE pragma" -}

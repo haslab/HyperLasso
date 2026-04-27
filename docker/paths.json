@@ -1,0 +1,8 @@
+{
+    "autfilt":"/usr/local/bin/autfilt",
+    "ltl2tgba":"/usr/local/bin/ltl2tgba",
+    "bait":"/usr/local/bin/bait.jar",
+    "rabit":"/usr/local/bin/rabit.jar",
+    "forklift":"/usr/local/bin/forklift.jar",
+    "roll":"/usr/local/bin/roll.jar"
+}

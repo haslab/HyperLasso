@@ -1,0 +1,39 @@
+{ "path": "isolation"
+, "benchs" :
+    {
+    
+    "rc_ser_2x1":
+        { "smv" : ["rc_2x1.smv","ser_2x1.smv"]
+        , "hp" : "implies_2x1.hp"
+        , "k" : 109, "expected" : true, "expectsWitness": false, "ahOpts" : "--incl-forq", "ahWitnessOpts" : "--incl-forklift" }
+    ,
+    "rc_ser_3x2":
+        { "smv" : ["rc_3x2.smv","ser_3x2.smv"]
+        , "hp" : "implies_3x2.hp"
+        , "k" : 3, "expected" : false,  "expectsWitness": true, "ahOpts" : "--incl-forq", "ahWitnessOpts" : "--incl-forklift" }
+    ,
+    "rc_ser_4x3":
+        { "smv" : ["rc_4x3.smv","ser_4x3.smv"]
+        , "hp" : "implies_4x3.hp"
+        , "k" : 4, "expected" : false,  "expectsWitness": true, "ahOpts" : "--incl-forq", "ahWitnessOpts" : "--incl-forklift" }
+    ,
+    
+    "ser_rc_2x1":
+        { "smv" : ["ser_2x1.smv","rc_2x1.smv"]
+        , "hp" : "implies_2x1.hp"
+        , "k" : 99, "expected" : true,  "expectsWitness": false, "ahOpts" : "--incl-forq", "ahWitnessOpts" : "--incl-forklift" }
+    ,
+    "ser_rc_3x2":
+        { "smv" : ["ser_3x2.smv","rc_3x2.smv"]
+        , "hp" : "implies_3x2.hp"
+        , "k" : 17, "expected" : true,  "expectsWitness": false, "ahOpts" : "--incl-forq", "ahWitnessOpts" : "--incl-forklift" }
+    ,
+    "ser_rc_4x3":
+        { "smv" : ["ser_4x3.smv","rc_4x3.smv"]
+        , "hp" : "implies_4x3.hp"
+        , "k" : 3, "expected" : true,  "expectsWitness": false, "ahOpts" : "--incl-forq", "ahWitnessOpts" : "--incl-forklift" }
+    
+    
+    }
+}
+

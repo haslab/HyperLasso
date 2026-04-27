@@ -1,0 +1,14 @@
+MODULE main
+VAR
+    assigns_0_0 : boolean;
+    a : 0..1;
+    r : 0..1;
+    d : 1..3;
+    review_0_0 : 0..3;
+    decision_0 : 0..3;
+ASSIGN
+    next(assigns_0_0) := assigns_0_0;
+    init(review_0_0) := 0;
+    next(review_0_0) := case (r = 0 & a = 0 & assigns_0_0 & review_0_0 != d & decision_0 = 0): d; TRUE: review_0_0; esac;
+    init(decision_0) := 0;
+    next(decision_0) := case (r = 1 & a = 0 & decision_0 = 0 & (assigns_0_0 -> review_0_0 != 0) & (review_0_0 = d)): d; TRUE: decision_0; esac;

@@ -1,0 +1,152 @@
+MODULE main
+
+
+VAR
+PIN_0 : boolean;
+PIN_1 : boolean;
+PIN_2 : boolean;
+PIN_3 : boolean;
+MASK_0 : boolean;
+MASK_1 : boolean;
+MASK_2 : boolean;
+MASK_3 : boolean;
+RESULT_0 : boolean;
+RESULT_1 : boolean;
+RESULT_2 : boolean;
+RESULT_3 : boolean;
+
+trigger_0 : boolean;
+trigger_1 : boolean;
+trigger_2 : 0..2;
+
+pc_0 : 0..2;
+pc_1 : 0..2;
+pc_2 : 0..3;
+
+turn : 0..2;
+
+
+ASSIGN
+init(RESULT_0) := FALSE;
+init(RESULT_1) := FALSE;
+init(RESULT_2) := FALSE;
+init(RESULT_3) := FALSE;
+
+init(pc_0) := 0;
+init(pc_1) := 0;
+init(pc_2) := 0;
+
+init(trigger_0) := FALSE;
+init(trigger_1) := FALSE;
+init(trigger_2) := 0;
+next(PIN_0) := PIN_0;
+next(PIN_1) := PIN_1;
+next(PIN_2) := PIN_2;
+next(PIN_3) := PIN_3;
+
+next(RESULT_0) :=
+    case
+        turn = 0 & pc_0 = 2 : RESULT_0 | MASK_0;  -- bitwise or
+        turn = 1 & pc_1 = 2 : RESULT_0 & !MASK_0; -- bitwise and with mask complement
+        TRUE : RESULT_0;
+    esac;
+
+next(RESULT_1) :=
+    case
+        turn = 0 & pc_0 = 2 : RESULT_1 | MASK_1;  -- bitwise or
+        turn = 1 & pc_1 = 2 : RESULT_1 & !MASK_1; -- bitwise and with mask complement
+        TRUE : RESULT_1;
+    esac;
+
+next(RESULT_2) :=
+    case
+        turn = 0 & pc_0 = 2 : RESULT_2 | MASK_2;  -- bitwise or
+        turn = 1 & pc_1 = 2 : RESULT_2 & !MASK_2; -- bitwise and with mask complement
+        TRUE : RESULT_2;
+    esac;
+
+next(RESULT_3) :=
+    case
+        turn = 0 & pc_0 = 2 : RESULT_3 | MASK_3;  -- bitwise or
+        turn = 1 & pc_1 = 2 : RESULT_3 & !MASK_3; -- bitwise and with mask complement
+        TRUE : RESULT_3;
+    esac;
+
+next(MASK_0) :=
+    case
+        turn = 2 & pc_2 = 3 : MASK_1; -- divide by 2
+        TRUE : MASK_0;
+    esac;
+
+next(MASK_1) :=
+    case
+        turn = 2 & pc_2 = 3 : MASK_2; -- divide by 2
+        TRUE : MASK_1;
+    esac;
+
+next(MASK_2) :=
+    case
+        turn = 2 & pc_2 = 3 : MASK_3; -- divide by 2
+        TRUE : MASK_2;
+    esac;
+
+next(MASK_3) :=
+    case
+        turn = 2 & pc_2 = 3 : FALSE; -- divide by 2
+        TRUE : MASK_3;
+    esac;
+
+next(trigger_0) :=
+    case
+        turn = 0 & pc_0 = 2 : FALSE;
+        turn = 1 & pc_1 = 2 & trigger_2 = 0 : TRUE;
+        turn = 2 & pc_2 = 1 & ((PIN_0 = MASK_0) & (PIN_1 = MASK_1) & (PIN_2 = MASK_2) & (PIN_3 = MASK_3)) : TRUE;
+        TRUE : trigger_0;
+    esac;
+
+next(trigger_1) :=
+    case
+        turn = 0 & pc_0 = 2 & trigger_2=0 : TRUE;
+        turn = 1 & pc_1 = 2 : FALSE;
+        turn = 2 & pc_2 = 1 & !((PIN_0 = MASK_0) & (PIN_1 = MASK_1) & (PIN_2 = MASK_2) & (PIN_3 = MASK_3)) : TRUE;
+        TRUE : trigger_1;
+    esac;
+
+next(trigger_2) :=
+    case
+        turn = 0 & pc_0 = 2 & trigger_2 < 2 : trigger_2+1;
+        turn = 1 & pc_1 = 2 & trigger_2 < 2 : trigger_2+1;
+        turn = 2 & pc_2 = 1 : 0;
+        TRUE : trigger_2;
+    esac;
+
+next(pc_0) :=
+    case
+        turn = 0 & pc_0 = 0 & !(MASK_0 | MASK_1 | MASK_2 | MASK_3) : pc_0;
+        turn = 0 & pc_0 = 0 &  (MASK_0 | MASK_1 | MASK_2 | MASK_3) : pc_0+1;
+        turn = 0 & pc_0 = 1 & !trigger_0 : pc_0;
+        turn = 0 & pc_0 = 1 &  trigger_0 : pc_0+1;
+        turn = 0 & pc_0 = 2 : 0;
+        TRUE : pc_0;
+    esac;
+
+next(pc_1) :=
+    case
+        turn = 1 & pc_1=0 & !(MASK_0 | MASK_1 | MASK_2 | MASK_3) : pc_1;
+        turn = 1 & pc_1=0 &  (MASK_0 | MASK_1 | MASK_2 | MASK_3) : pc_1+1;
+        turn = 1 & pc_1=1 & !trigger_1 : pc_1;
+        turn = 1 & pc_1=1 &  trigger_1 : pc_1+1;
+        turn = 1 & pc_1=2 : 0;
+        TRUE : pc_1;
+    esac;
+
+next(pc_2) :=
+    case
+        turn = 2 & pc_2=0 & !(MASK_0 | MASK_1 | MASK_2 | MASK_3) : pc_2;
+        turn = 2 & pc_2=0 &  (MASK_0 | MASK_1 | MASK_2 | MASK_3) : pc_2+1;
+        turn = 2 & pc_2=1 : pc_2+1;
+        turn = 2 & pc_2=2 & !(trigger_2=2) : pc_2;
+        turn = 2 & pc_2=2 &  (trigger_2=2) : pc_2+1;
+        turn = 2 & pc_2=3 : 0;
+        TRUE : pc_2;
+    esac;

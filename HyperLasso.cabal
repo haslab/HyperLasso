@@ -1,0 +1,85 @@
+cabal-version:      3.6
+name:               HyperLasso
+version:            0.1.0.0
+synopsis:
+
+license:            BSD-3-Clause
+license-file:       LICENSE
+author:             Hugo Pacheco, Alcino Cunha, Nuno Macedo
+maintainer:         hpacheco@di.uminho.pt
+copyright:          (c) 2026 Universidade do Minho
+
+source-repository head
+   type:     git
+   location: https://github.com/haslab/HyperLasso/
+   subdir:   .
+
+category:           Language
+
+executable HyperLasso
+    hs-source-dirs: src
+    main-is: Main.hs
+    build-depends:
+        base, cmdargs, safe, deepseq,
+        mtl, transformers, containers, keys, unordered-containers, array,
+        text, bytestring, prettyprinter, hashable, parsec,
+        crypton, digits, intern, split,
+        directory, filepath, temporary, shelly, process, time, sbv == 13.3.0.1
+    build-tool-depends:
+        alex:alex,
+        happy:happy
+    default-language: Haskell2010
+    default-extensions:
+        RankNTypes
+        DataKinds
+        DeriveDataTypeable
+        DeriveFoldable
+        DeriveTraversable
+        DeriveFunctor
+        DeriveGeneric
+        GeneralizedNewtypeDeriving
+        OverloadedStrings
+        ExtendedDefaultRules
+        TupleSections
+        ViewPatterns
+        ScopedTypeVariables
+        MultiParamTypeClasses
+        FlexibleContexts
+        FlexibleInstances
+        UndecidableInstances
+        TypeFamilies
+        PatternSynonyms
+        TypeApplications
+        TypeFamilyDependencies
+        FunctionalDependencies
+        ConstraintKinds
+        QuantifiedConstraints
+    other-modules:
+        IO
+        MC
+        SMT.SBV
+        SMV.Lexer
+        SMV.Packed
+        SMV.Parser
+        SMV.Pretty
+        SMV.Syntax
+        SMV.Typing
+        SMV.Trace
+        SMV.NuXmv
+        Transform.Bexpr.Internal
+        Transform.Bexpr
+        Transform.Bpacked
+        Transform.Minimize
+        Transform.Normalize
+        Transform.Pexpr
+        Transform.Rename
+        Transform.SMV
+        Transform.SMVToSBV
+        Transform.Substitute
+        Utils.Error
+        Utils.Location
+        Utils.Parser
+        Utils.Pretty
+        Utils.Misc
+    ghc-options: -w
+

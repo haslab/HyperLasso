@@ -1,0 +1,44 @@
+{ "path": "Bakery"
+, "benchs" :
+    {
+    
+    "robust_crit_1":
+        { "smv" : ["bakery_1.smv","bakery_1.smv"]
+        , "asmv" :  ["bakery_assigns_1.smv","bakery_assigns_1.smv"]
+        , "hp" : "robust_crit_1.hq"
+        , "k" : 2, "expected" : true, "expectsWitness" : false, "ahOpts" : "--incl-forq", "ahWitnessOpts" : "--incl-roll" }
+    ,
+    "robust_crit_2":
+        { "smv" : ["bakery_2.smv","bakery_2.smv"]
+        , "asmv" :  ["bakery_assigns_2.smv","bakery_assigns_2.smv"]
+        , "hp" : "robust_crit_2.hq"
+        , "k" : 2, "expected" : false, "expectsWitness" : true, "ahOpts" : "--incl-forq", "ahWitnessOpts" : "--incl-roll" }
+    ,
+    "robust_crit_3":
+        { "smv" : ["bakery_3.smv","bakery_3.smv"]
+        , "asmv" :  ["bakery_assigns_3.smv","bakery_assigns_3.smv"]
+        , "hp" : "robust_crit_3.hq"
+        , "k" : 2, "expected" : false, "expectsWitness" : true, "ahOpts" : "--incl-forq", "ahWitnessOpts" : "--incl-roll" }
+    ,
+    
+    "robust_ncrit_1":
+        { "smv" : ["bakery_1.smv","bakery_1.smv"]
+        , "asmv" :  ["bakery_assigns_1.smv","bakery_assigns_1.smv"]
+        , "hp" : "robust_ncrit_1.hq"
+        , "k" : 13, "expected" : true, "expectsWitness" : false, "ahOpts" : "--incl-forq", "ahWitnessOpts" : "--incl-roll" }
+    ,
+    "robust_ncrit_2":
+        { "smv" : ["bakery_2.smv","bakery_2.smv"]
+        , "asmv" :  ["bakery_assigns_2.smv","bakery_assigns_2.smv"]
+        , "hp" : "robust_ncrit_2.hq"
+        , "k" : 13, "expected" : true, "expectsWitness" : false, "ahOpts" : "--incl-forq", "ahWitnessOpts" : "--incl-roll" }
+    ,
+    "robust_ncrit_3":
+        { "smv" : ["bakery_3.smv","bakery_3.smv"]
+        , "asmv" :  ["bakery_assigns_3.smv","bakery_assigns_3.smv"]
+        , "hp" : "robust_ncrit_3.hq"
+        , "k" : 11, "expected" : true, "expectsWitness" : false, "ahOpts" : "--incl-forq", "ahWitnessOpts" : "--incl-roll" }
+        
+    }
+}
+

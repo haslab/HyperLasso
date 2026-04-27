@@ -1,0 +1,54 @@
+{ "path": "CMS"
+, "benchs" :
+    {
+   
+    "gni_any_1x1":
+        { "smv" : ["cms_any_1x1.smv","cms_any_1x1.smv","cms_any_1x1.smv"]
+        , "hp" : "gni_1x1.hp"
+        , "k" : 8, "expected" : true, "expectsWitness" : false, "ahOpts" : "--incl-spot", "ahWitnessOpts" : "--incl-spot" }
+    ,
+    "gni_any_2x2":
+        { "smv" : ["cms_any_2x2.smv","cms_any_2x2.smv","cms_any_2x2.smv"]
+        , "hp" : "gni_2x2.hp"
+        , "k" : 4, "expected" : false, "expectsWitness" : true, "ahOpts" : "--incl-spot", "ahWitnessOpts" : "--incl-spot" }
+    ,
+    "gni_any_3x3":
+        { "smv" : ["cms_any_3x3.smv","cms_any_3x3.smv","cms_any_3x3.smv"]
+        , "hp" : "gni_3x3.hp"
+        , "k" : 6, "expected" : false, "expectsWitness" : true, "ahOpts" : "--incl-spot", "ahWitnessOpts" : "--incl-spot" }
+    ,
+    
+    "gni_ndet_1x1":
+        { "smv" : ["cms_ndet_1x1.smv","cms_ndet_1x1.smv","cms_ndet_1x1.smv"]
+        , "hp" : "gni_1x1.hp"
+        , "k" : 8, "expected" : true, "expectsWitness" : false, "ahOpts" : "--incl-spot", "ahWitnessOpts" : "--incl-spot" }
+    ,
+    "gni_ndet_2x2":
+        { "smv" : ["cms_ndet_2x2.smv","cms_ndet_2x2.smv","cms_ndet_2x2.smv"]
+        , "hp" : "gni_2x2.hp"
+        , "k" : 5, "expected" : true, "expectsWitness" : false, "ahOpts" : "--incl-spot", "ahWitnessOpts" : "--incl-spot" }
+    ,
+    "gni_ndet_3x3":
+        { "smv" : ["cms_ndet_3x3.smv","cms_ndet_3x3.smv","cms_ndet_3x3.smv"]
+        , "hp" : "gni_3x3.hp"
+        , "k" : 5, "expected" : true, "expectsWitness" : false, "ahOpts" : "--incl-spot", "ahWitnessOpts" : "--incl-spot" }
+    ,
+    
+    "gni_max_1x1":
+        { "smv" : ["cms_max_1x1.smv","cms_max_1x1.smv","cms_max_1x1.smv"]
+        , "hp" : "gni_1x1.hp"
+        , "k" : 8, "expected" : true, "expectsWitness" : false, "ahOpts" : "--incl-spot", "ahWitnessOpts" : "--incl-spot" }
+    ,
+    "gni_max_2x2":
+        { "smv" : ["cms_max_2x2.smv","cms_max_2x2.smv","cms_max_2x2.smv"]
+        , "hp" : "gni_2x2.hp"
+        , "k" : 5, "expected" : true, "expectsWitness" : false, "ahOpts" : "--incl-spot", "ahWitnessOpts" : "--incl-spot" }
+    ,
+    "gni_max_3x3":
+        { "smv" : ["cms_max_3x3.smv","cms_max_3x3.smv","cms_max_3x3.smv"]
+        , "hp" : "gni_3x3.hp"
+        , "k" : 5, "expected" : true, "expectsWitness" : false, "ahOpts" : "--incl-spot", "ahWitnessOpts" : "--incl-spot" }
+    
+    }
+}
+
