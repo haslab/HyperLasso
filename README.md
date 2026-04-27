@@ -44,15 +44,15 @@ In the folder `benchmarks` you can find several categories of examples. See more
 
 You can find pre-built Docker containers with HyperLasso and all dependencies needed to run its benchmarks at `hugopacheco/hyperlasso` [DockerHub](https://hub.docker.com/repository/docker/hugopacheco/hyperlasso). We have prepared Docker containers for `arm64` and for `amd64`. The correct one is chosen automatically, but you may force a particular `<platform>` with `--platform=<platform>`.
 
-To launch, for instance, the `arm64` Docker container in interactive mode, run:
+To launch, the Docker container in interactive mode, run:
 
 ```
-docker run -it hugopacheco/hyperlasso:arm64 /bin/bash
+docker run -it hugopacheco/hyperlasso /bin/bash
 ```
 
 To run the benchmarks inside the container, you would like to mount the benchmarks folder into the container as well. If running docker at the root of this repository, pass the additional option `-v $PWD/benchmarks:/HyperLasso/benchmarks`.
 
 ## References
 
-[1] Cunha, Alcino, Pacheco, Hugo and Macedo, Nuno. “HyperLasso: Bounded Model Checking of ∀+∃+-Liveness Hyperproperties.” Proceedings of 2026 International Conference on Computer Aided Verification. to appear.
+[1] Cunha, Alcino, Pacheco, Hugo and Macedo, Nuno. **HyperLasso: Bounded Model Checking of ∀+∃+-Liveness Hyperproperties.** Proceedings of 2026 International Conference on Computer Aided Verification. to appear.
 
