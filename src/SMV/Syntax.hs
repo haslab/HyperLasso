@@ -1,3 +1,15 @@
+-- |
+-- Abstract syntax of SMV models and HyperLTL formulas, as produced by
+-- the Alex/Happy frontend in "SMV.Lexer" / "SMV.Parser".
+--
+-- This is the canonical place to add new language constructs: extend
+-- 'Pexpr' (expression-level) or 'Pformula' (formula-level), then update
+-- the corresponding rules in "SMV.Lexer" and "SMV.Parser", the
+-- boolean-level IR in "Transform.Bexpr", and the symbolic encoding in
+-- "Transform.SMVToSBV". Pretty-printing in "SMV.Pretty" must be kept in
+-- sync.
+--
+-- See @ARCHITECTURE.md@ at the repo root.
 module SMV.Syntax where
 
 import Control.DeepSeq

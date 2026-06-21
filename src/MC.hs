@@ -1,5 +1,26 @@
 {-# LANGUAGE OverloadedStrings #-}
 
+-- |
+-- Bounded model-checking driver for HyperLasso.
+--
+-- 'MCState' is the loop-carried state: a list of (multi-)modules
+-- ('mcMultis'), the current 'Bformula' under check ('mcFormula'), and the
+-- per-quantifier unrolling bounds ('mcKs' / 'mcPrevKs'). The pipeline in
+-- "Main" repeatedly calls into this module, which encodes the bounded
+-- problem to SMT (via "Transform.SMVToSBV" / "SMT.SBV"), optionally
+-- validates synthesised counter-example traces with the complete LTL
+-- backend ('completeMC', dispatched via 'CompleteMC'), and on UNSAT
+-- negates the discovered traces ('negateMCFormula') before stepping @k@
+-- and iterating.
+--
+-- Extension points:
+--
+--   * adding a new complete-check backend: add a constructor to
+--     'CompleteMC' and a matching case in 'runCompleteMC';
+--   * adding new HyperLTL operators that must survive into the
+--     completeness check: extend 'normalizeNuXmvExpr'.
+--
+-- See @ARCHITECTURE.md@ at the repo root for the wider context.
 module MC where
 
 import Data.List as List

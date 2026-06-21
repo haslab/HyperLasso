@@ -52,6 +52,19 @@ docker run -it hugopacheco/hyperlasso /bin/bash
 
 To run the benchmarks inside the container, you would like to mount the benchmarks folder into the container as well. If running docker at the root of this repository, pass the additional option `-v $PWD/benchmarks:/HyperLasso/benchmarks`.
 
+## For developers
+
+If you are looking to read, modify, or extend the source code of HyperLasso (rather than just running it on existing inputs), start with [ARCHITECTURE.md](ARCHITECTURE.md). It describes the pipeline (CLI → parser → boolean IR → SMT/SBV ⇄ nuXmv fallback), maps every module under [src/](src/) to its responsibility, and documents the four most common extension points:
+
+* **Adding a new HyperLTL / SMV operator** — touches [src/SMV/Syntax.hs](src/SMV/Syntax.hs), the Alex/Happy frontend in [src/SMV/](src/SMV/), and the encoding in [src/Transform/SMVToSBV.hs](src/Transform/SMVToSBV.hs).
+* **Adding a new input language / frontend** — produce `PackedBmodule` + `Bformula` and the rest of the pipeline ([src/MC.hs](src/MC.hs) onwards) is reused unchanged.
+* **Adding a new SMT backend** — already plumbed via `--smtsolver` and the `Solver` enum re-exported from [src/SMT/SBV.hs](src/SMT/SBV.hs); SBV-supported solvers (Z3, CVC5, Boolector, …) work out of the box, others require extending `smtCfg`.
+* **Replacing the complete-check backend** (alternative to nuXmv) — implement the two-function interface in [src/SMV/NuXmv.hs](src/SMV/NuXmv.hs) and wire it into `runCompleteMC` in [src/MC.hs](src/MC.hs).
+
+ARCHITECTURE.md also explicitly lists the **hard-coded research-prototype assumptions** (e.g. the `-k 99` BMC bound used by the nuXmv non-emptiness check) so that they are easy to find and change.
+
+For adding new benchmark families, see [benchmarks/README.md](benchmarks/README.md).
+
 ## References
 
 [1] Cunha, Alcino, Pacheco, Hugo and Macedo, Nuno. **HyperLasso: Bounded Model Checking of ∀+∃+-Liveness Hyperproperties.** Proceedings of 2026 International Conference on Computer Aided Verification. to appear.

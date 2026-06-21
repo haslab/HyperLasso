@@ -1,6 +1,18 @@
 {-# LANGUAGE GADTs, BangPatterns, DeriveGeneric #-}
 
-module Transform.SMVToSBV 
+-- |
+-- Encoding of the bounded SMV-modules + HyperLTL problem into SBV
+-- symbolic terms.
+--
+-- This is the module to touch when adding (or changing the SMT-level
+-- semantics of) a HyperLTL or SMV operator: each LTL operator is
+-- encoded explicitly under the lasso unrolling scheme controlled by the
+-- per-quantifier bounds @k@ from "MC". Pretty-printing, parsing, and
+-- the AST itself live elsewhere — see "SMV.Syntax", "SMV.Parser", and
+-- "SMV.Pretty" — but the symbolic interpretation lives here.
+--
+-- See @ARCHITECTURE.md@ at the repo root for the broader pipeline.
+module Transform.SMVToSBV
     ( module Transform.SMVToSBV
     , module SMT.SBV
     ) where

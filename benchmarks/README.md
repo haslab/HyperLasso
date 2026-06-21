@@ -67,3 +67,30 @@ You can see all benchmark options with:
 The results in the benchmarks table of the CAV26 paper have been produced with a default timeout value of 300s, running in our test machine. By default, we are skipping benchmarks that are known to timeout. You can disable that behaviour with `--skipTimeout=False`.
 
 When no witness is found, many of the benchmarks are configured to have running times close to the timeout (see the paper for the rationale). If benchmarks are timing out in your setup, make sure that you increase the timeout value with `--timeout=<seconds>`.
+
+## Adding a new benchmark family
+
+The benchmark suite is intentionally extensible. A new family is a folder under
+`benchmarks/` containing parametric Python generator scripts. The shared building blocks are:
+
+* **Formula DSL** — [`render_formula.py`](render_formula.py) defines a `Formula`
+  class with overloaded Python operators (`&`, `|`, `~`, `>>`, …) so that
+  HyperLTL formulas can be built compositionally. Call
+  `spec.prettyprint(ah=AH)` to emit either HyperLasso syntax (`ah=False`) or
+  AutoHyper-compatible syntax (`ah=True`). Categories whose models rely on
+  declarative `TRANS` clauses (not supported by AutoHyper) ship an alternative
+  generator that desugars `TRANS` into formula-level constraints — see the
+  `_assigns` variants for examples.
+* **Generator scripts** — typically take parameters like the number of
+  processes / cells and write an `.smv` model plus an `.hltl` formula to disk.
+  Mirror the layout of an existing family (e.g. [Bakery](Bakery) or
+  [CMS](CMS)) and re-use `render_formula.py`.
+* **Runner registration** — [`benchs.py`](benchs.py) discovers families from
+  category modules located in this folder (e.g. [`Bakery/`](Bakery/),
+  [`CMS/`](CMS/), …). To add a new family, follow the same module layout and
+  expose the parameter grid and expected results the way the existing
+  families do, then run `./benchs.py --group=<YourFamily>` to test it.
+
+You can re-generate every benchmark instance shipped with the artifact with
+`./generate.sh`. New families should integrate with this script for
+reproducibility.

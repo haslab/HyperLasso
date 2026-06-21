@@ -1,3 +1,13 @@
+-- |
+-- HyperLasso CLI entry point.
+--
+-- Parses arguments into 'Args' (via @cmdargs@), reads SMV models and the
+-- HyperLTL formula through "IO", drives the parsing/transform/MC
+-- pipeline, and renders the result. The actual model-checking loop
+-- lives in "MC"; this module is purely orchestration.
+--
+-- See @ARCHITECTURE.md@ at the repo root for the full pipeline and a
+-- description of the available extension points.
 module Main where
 
 import Data.IORef

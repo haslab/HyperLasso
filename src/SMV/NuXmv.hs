@@ -1,3 +1,31 @@
+-- |
+-- Driver for the external @nuXmv@ model checker, used as the complete
+-- (non-hyper) LTL backend that validates counter-example candidates
+-- synthesised by the SMT loop in "MC".
+--
+-- The backend is invoked as a subprocess via @shelly@; the @nuXmv@ binary
+-- must be on @PATH@. Two operations are exposed and form the interface
+-- that any replacement backend (e.g. a different complete LTL checker)
+-- should implement:
+--
+--   * 'doCheckLTLSpecNuXMV' — check an LTL spec against an SMV file,
+--     returning a 'Trace' counter-example if the spec fails.
+--   * 'doCheckNonEmptyNuXMV' — check whether the model admits any
+--     infinite execution.
+--
+-- Known hard-coded prototype assumptions documented for reviewers and
+-- downstream extenders:
+--
+--   * The BMC bound for the non-emptiness check is fixed at @-k 99@ and
+--     the fairness probe is fixed at @F FALSE@ in
+--     'nuXmvCheckNonEmptyScript'. The match string used to detect "no
+--     counter-example" in 'doCheckNonEmptyNuXMV' must be kept in sync if
+--     the bound is changed.
+--   * The nuXmv command pipeline (@read_model; flatten_hierarchy;
+--     encode_variables; build_model; …@) is hard-coded in
+--     'nuXmvCheckLTLSpecScript' / 'nuXmvCheckNonEmptyScript'.
+--
+-- See @ARCHITECTURE.md@ at the repo root.
 module SMV.NuXmv where
 
 import Data.Maybe

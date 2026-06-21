@@ -1,6 +1,20 @@
 {-# LANGUAGE GADTs, BangPatterns, StandaloneDeriving #-}
 
-module SMT.SBV 
+-- |
+-- Thin wrapper around the SBV library used as the SMT backend.
+--
+-- The 'Solver' type (re-exported from @Data.SBV.Dynamic@) and 'smtCfg'
+-- are the extension point for SMT backend selection. Any solver natively
+-- supported by SBV (Z3, CVC5, Boolector, Yices, MathSAT, …) is available
+-- via the @--smtsolver@ CLI flag wired in "Main". The default is
+-- 'defaultSMTSolver' = 'Z3'.
+--
+-- To plug in a solver not supported by SBV, replace the dispatch in
+-- 'smtCfg' (and/or the @runWithSBV@ call site) with a custom
+-- translation that produces a result of the type expected by "MC".
+--
+-- See @ARCHITECTURE.md@ at the repo root.
+module SMT.SBV
     ( module SMT.SBV 
     , SBV(..),Symbolic(..),Query(..),SBool,SInteger,SMTConfig(..),SatResult(..),ThmResult(..),SMTResult(..),Kind(..),HasKind(..)
     , SVal,Solver(..),CV(..)
